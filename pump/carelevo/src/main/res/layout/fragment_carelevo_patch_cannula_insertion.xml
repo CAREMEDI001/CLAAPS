@@ -92,12 +92,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="10dp"
-            android:text="@string/carelevo_patch_safety_check_desc_warning"
+            android:text="@string/carelevo_patch_needle_insertion_desc_warning"
             android:textColor="?attr/ribbonCriticalColor"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/iv_warning"
             app:layout_constraintTop_toBottomOf="@id/tv_step2_desc"
-            tools:text="안전점검 후 인슐린 방울이 맺혔는지 확인해 주세요." />
+            tools:text="누르고 10초 유지하세요." />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_buttons"

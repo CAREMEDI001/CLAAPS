@@ -19,7 +19,7 @@
         <string name="carelevo_total_delivered_insulin_key">total delivered insulin</string>
         <string name="carelevo_running_remain_time">패치 남은 시간</string>-->
 
-    <string name="carelevo_patch_state_key">상태</string>
+    <string name="carelevo_patch_state_key">연결 상태</string>
     <string name="carelevo_serial_number_key">시리얼 번호</string>
     <string name="carelevo_firmware_version_key">펌웨어 버전</string>
     <string name="carelevo_lot_number_key">로트 번호</string>
@@ -33,9 +33,9 @@
     <string name="carelevo_total_delivered_bolus_key">총 주입 볼러스</string>
     <string name="carelevo_running_remain_time">패치 남은 시간</string>
 
-    <string name="carelevo_state_none_value">no connection</string>
-    <string name="carelevo_state_disconnected_value">disconnected</string>
-    <string name="carelevo_state_connected_value">connected</string>
+    <string name="carelevo_state_none_value">No Connection</string>
+    <string name="carelevo_state_disconnected_value">Disconnected</string>
+    <string name="carelevo_state_connected_value">Connected</string>
 
     <string name="carelevo_overview_connect_btn_label">CONNECT</string>
     <string name="carelevo_overview_communication_btn_label">COMMUNICATION CHECK</string>
@@ -43,11 +43,11 @@
     <string name="carelevo_overview_pump_resume_btn_label">PUMP RESUME</string>
     <string name="carelevo_overview_pump_discard_btn_label">DISCARD</string>
 
-    <string name="carelevo_overview_infusion_state_basal">basal</string>
-    <string name="carelevo_overview_infusion_state_temp_basal">temp basal</string>
-    <string name="carelevo_overview_infusion_state_imme_bolus">imme bolus</string>
-    <string name="carelevo_overview_infusion_state_extend_bolus">extend bolus</string>
-    <string name="carelevo_overview_infusion_state_pump_stop">pump stop</string>
+    <string name="carelevo_overview_infusion_state_basal">Basal</string>
+    <string name="carelevo_overview_infusion_state_temp_basal">Temp Basal</string>
+    <string name="carelevo_overview_infusion_state_imme_bolus">Imme Bolus</string>
+    <string name="carelevo_overview_infusion_state_extend_bolus">Extend Bolus</string>
+    <string name="carelevo_overview_infusion_state_pump_stop">Pump Stop</string>
 
     <string name="carelevo_connect_prepare_title">패치 시작</string>
     <string name="carelevo_connect_patch_title">패치 검색 및 연결</string>
@@ -72,6 +72,7 @@
     <string name="common_unit_hour_value">%d시간</string>
     <string name="common_unit_sec_value">%d초</string>
     <string name="common_unit_step_format">%1$d/%2$d</string>
+    <string name="common_unit_value_day_hour_min">%1$d일 %2$02d:%3$02d</string>
 
     <string name="carelevo_title_fill_insulin">패치에 인슐린 채우기</string>
     <string name="carelevo_notice_fill_insulin_amount">사용 기간 (최대 168시간)을 고려하여 패치에 인슐린을 채워주세요.\n(50 U - 300 U)인슐린 양 입력 버튼을 눌러 채운 인슐린 양을 입력해 주세요.</string>
@@ -83,6 +84,9 @@
     <string name="carelevo_btn_safety_check">안전점검</string>
     <string name="carelevo_btn_ready_complete">준비완료</string>
     <string name="carelevo_btn_close">닫기</string>
+    <string name="carelevo_btn_cancel">취소</string>
+    <string name="carelevo_btn_confirm">확인</string>
+    <string name="carelevo_btn_research">재검색</string>
     <string name="carelevo_btn_needle_insert_check">바늘 삽입 점검</string>
 
     <string name="carelevo_patch_step_1">STEP 1.</string>
@@ -117,5 +121,24 @@
     <string name="carelevo_dialog_patch_needle_check_title">바늘 삽입이 되지 않았나요?</string>
     <string name="carelevo_dialog_patch_needle_check_desc">어플리케이터 가운데 부분을 끝까지 눌러 바늘을 삽입해 주세요. 정상적으로 바늘이 삽입되면 부저음이 1회 발생합니다.\n아래 [바늘 삽입 점검] 버튼을 눌러주세요.</string>
     <string name="carelevo_dialog_patch_needle_check_desc_warning">누르고 10초 유지하세요.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">새 패치 사용을 위해 기존 패치를 사용 종료하시겠어요?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">확인 버튼을 누르면 인슐린 주입이 중단됩니다.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">연결하려는 패치 주소가 맞다면 확인 버튼, 아니라면 재검색 버튼을 클릭해 주세요.</string>
+
+    <string name="carelevo_toast_patch_connecting">패치가 연결 중입니다.</string>
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">블루투스 연결 상태를 확인해 주세요.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">연결된 패치가 없습니다.</string>
+    <string name="carelevo_toast_msg_profile_not_set">프로파일이 설정되어 있지 않습니다.</string>
+    <string name="carelevo_toast_msg_cannula_inserted">바늘 삽입이 완료 되었습니다.</string>
+    <string name="carelevo_toast_msg_cannula_not_inserted">바늘 삽입이 완료 되지 않았습니다.</string>
+    <string name="carelevo_toast_msg_cannula_check_failed">바늘 삽입 점검 실패했습니다.</string>
+    <string name="carelevo_toast_msg_discard_complete">사용종료 되었습니다.</string>
+    <string name="carelevo_toast_msg_discard_failed">사용종료 실패 했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_msg_set_basal_complete">패치 연결이 완료되었습니다.</string>
+    <string name="carelevo_toast_msg_set_basal_failed">기저 주입 요청 실패했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_mag_set_basal_resume_success">주입 재개 성공했습니다.</string>
+    <string name="carelevo_toast_mag_set_basal_resume_fail">주입 재개 실패 했습니다. 다시 시도해 주세요.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_success">"주입 정지 성공했습니다."</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">주입 정지 실패했습니다. 다시 시도해 주세요.</string>
 
 </resources>

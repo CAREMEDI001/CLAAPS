@@ -64,7 +64,7 @@ class CarelevoPatchConnectionFlowFragment : CarelevoBaseFragment<FragmentCarelev
                     CarelevoPatchStep.PATCH_CONNECT -> CarelevoPatchConnectFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_patch_title)
                     CarelevoPatchStep.SAFETY_CHECK -> CarelevoPatchSafetyCheckFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_safety_check_title)
                     CarelevoPatchStep.PATCH_ATTACH -> CarelevoPatchAttachFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_patch_attach_title)
-                    CarelevoPatchStep.NEEDLE_INSERTION -> CarelevoPatchNeedleInsertionFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_cannula_check_title)
+                    CarelevoPatchStep.NEEDLE_INSERTION -> CarelevoPatchCannulaInsertionFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_cannula_check_title)
                 }
                 setFragment(currentFragment)
                 binding.tvTitle.text = title

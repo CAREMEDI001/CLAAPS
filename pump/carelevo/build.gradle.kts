@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.ksp)
+    id("kotlin-kapt")
     id("kotlin-android")
     id("android-module-dependencies")
     id("test-module-dependencies")
@@ -9,12 +10,6 @@ plugins {
 
 android {
     namespace = "info.nightscout.androidaps.plugins.pump.carelevo"
-    defaultConfig {
-        ksp {
-            arg("room.incremental", "true")
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
-    }
     buildFeatures {
         dataBinding = true
     }

@@ -18,16 +18,20 @@ import info.nightscout.androidaps.plugins.pump.carelevo.ble.data.isPeripheralCon
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.PatchState
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.CarelevoPatchObserver
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.ResponseResult
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.AlertReportResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.BasalInfusionResumeResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.FinishPulseReportResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.InfusionInfoReportResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.InfusionModeResult.Companion.commandToCode
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.NoticeReportResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.PatchResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.PumpStateResult.Companion.commandToCode
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.WarningReportResultModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.infusion.CarelevoInfusionInfoDomainModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.userSetting.CarelevoUserSettingInfoDomainModel
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
@@ -41,6 +45,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import java.time.LocalDateTime
 import java.util.Optional
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -64,7 +69,8 @@ class CarelevoPatch @Inject constructor(
     private val updateMaxBolusDoseUseCase: CarelevoUpdateMaxBolusDoseUseCase,
     private val updateLowInsulinNoticeAmountUseCase: CarelevoUpdateLowInsulinNoticeAmountUseCase,
 
-    private val createUserSettingInfoUseCase: CarelevoCreateUserSettingInfoUseCase
+    private val createUserSettingInfoUseCase: CarelevoCreateUserSettingInfoUseCase,
+    private val carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
 ) {
 
     private val bleDisposable = CompositeDisposable()
@@ -289,7 +295,30 @@ class CarelevoPatch @Inject constructor(
             }
 
             is WarningReportResultModel -> {
+                Log.d("ble_observer", "[CarelevoPatchRx::proceedPatchEvent] warning report : ${model.value}, ${model.cause}")
+                val info = CarelevoAlarmInfo(
+                    alarmId = System.currentTimeMillis().toString(),
+                    alarmType = model.value,
+                    cause = model.cause,
+                    createdAt = LocalDateTime.now().toString(),
+                    updatedAt = LocalDateTime.now().toString(),
+                    acknowledged = false
+                )
+                bleDisposable += carelevoAlarmInfoUseCase.upsertAlarm(info)
+                    .subscribeOn(aapsSchedulers.io)
+                    .observeOn(aapsSchedulers.io)
+                    .subscribe(
+                        { Log.d("alarm", "upsert complete") },
+                        { e -> Log.e("alarm", "upsert error", e) }
+                    )
+            }
 
+            is AlertReportResultModel -> {
+                Log.d("ble_observer", "[CarelevoPatchRx::proceedPatchEvent] alert report : ${model.value}, ${model.cause}")
+            }
+
+            is NoticeReportResultModel -> {
+                Log.d("ble_observer", "[CarelevoPatchRx::proceedPatchEvent] notice report : ${model.value}, ${model.cause}")
             }
 
             is InfusionInfoReportResultModel -> {

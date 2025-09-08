@@ -2,18 +2,21 @@ package info.nightscout.androidaps.plugins.pump.carelevo.di
 
 import dagger.Module
 import dagger.Provides
+import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoAlarmInfoLocalDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoInfusionInfoDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoPatchInfoDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoUserSettingInfoDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.remote.CarelevoBtBasalRemoteDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.remote.CarelevoBtBolusRemoteDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.remote.CarelevoBtPatchRemoteDataSource
+import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoAlarmInfoLocalRepositoryImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoBasalRepositoryImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoBolusRepositoryImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoInfusionInfoRepositoryImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoPatchInfoRepositoryImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoPatchRepositoryImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.repository.CarelevoUserSettingInfoRepositoryImpl
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoBasalRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoBolusRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
@@ -26,8 +29,8 @@ class CarelevoRepositoryModule {
 
     @Provides
     fun provideCarelevoBasalRepository(
-        carelevoBtBasalRemoteDataSource : CarelevoBtBasalRemoteDataSource
-    ) : CarelevoBasalRepository {
+        carelevoBtBasalRemoteDataSource: CarelevoBtBasalRemoteDataSource
+    ): CarelevoBasalRepository {
         return CarelevoBasalRepositoryImpl(
             carelevoBtBasalRemoteDataSource
         )
@@ -35,8 +38,8 @@ class CarelevoRepositoryModule {
 
     @Provides
     fun provideCarelevoBolusRepository(
-        carelevoBtBolusRemoteDataSource : CarelevoBtBolusRemoteDataSource
-    ) : CarelevoBolusRepository {
+        carelevoBtBolusRemoteDataSource: CarelevoBtBolusRemoteDataSource
+    ): CarelevoBolusRepository {
         return CarelevoBolusRepositoryImpl(
             carelevoBtBolusRemoteDataSource
         )
@@ -44,8 +47,8 @@ class CarelevoRepositoryModule {
 
     @Provides
     fun provideCarelevoPatchRepository(
-        carelevoBtPatchRemoteDataSource : CarelevoBtPatchRemoteDataSource
-    ) : CarelevoPatchRepository {
+        carelevoBtPatchRemoteDataSource: CarelevoBtPatchRemoteDataSource
+    ): CarelevoPatchRepository {
         return CarelevoPatchRepositoryImpl(
             carelevoBtPatchRemoteDataSource
         )
@@ -53,8 +56,8 @@ class CarelevoRepositoryModule {
 
     @Provides
     fun provideCarelevoInfusionInfoRepository(
-        carelevoInfusionInfoDataSource : CarelevoInfusionInfoDataSource
-    ) : CarelevoInfusionInfoRepository {
+        carelevoInfusionInfoDataSource: CarelevoInfusionInfoDataSource
+    ): CarelevoInfusionInfoRepository {
         return CarelevoInfusionInfoRepositoryImpl(
             carelevoInfusionInfoDataSource
         )
@@ -62,8 +65,8 @@ class CarelevoRepositoryModule {
 
     @Provides
     fun provideCarelevoPatchInfoRepository(
-        carelevoPatchInfoDataSource : CarelevoPatchInfoDataSource
-    ) : CarelevoPatchInfoRepository {
+        carelevoPatchInfoDataSource: CarelevoPatchInfoDataSource
+    ): CarelevoPatchInfoRepository {
         return CarelevoPatchInfoRepositoryImpl(
             carelevoPatchInfoDataSource
         )
@@ -71,10 +74,17 @@ class CarelevoRepositoryModule {
 
     @Provides
     fun provideCarelevoUserSettingInfoRepository(
-        carelevoUserSettingInfoDataSource : CarelevoUserSettingInfoDataSource
-    ) : CarelevoUserSettingInfoRepository {
+        carelevoUserSettingInfoDataSource: CarelevoUserSettingInfoDataSource
+    ): CarelevoUserSettingInfoRepository {
         return CarelevoUserSettingInfoRepositoryImpl(
             carelevoUserSettingInfoDataSource
         )
+    }
+
+    @Provides
+    fun provideCarelevoAlarmInfoLocalRepository(
+        carelevoAlarmInfoLocalDataSource: CarelevoAlarmInfoLocalDataSource
+    ): CarelevoAlarmInfoRepository {
+        return CarelevoAlarmInfoLocalRepositoryImpl(carelevoAlarmInfoLocalDataSource)
     }
 }

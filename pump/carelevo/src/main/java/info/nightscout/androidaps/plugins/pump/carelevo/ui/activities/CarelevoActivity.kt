@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.carelevo.databinding.ActivityCare
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.CarelevoBaseActivity
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoCommunicationCheckFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchConnectionFlowFragment
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.type.CarelevoScreenType
 
 class CarelevoActivity : CarelevoBaseActivity<ActivityCarelevoBinding>(R.layout.activity_carelevo) {
 
@@ -19,10 +20,12 @@ class CarelevoActivity : CarelevoBaseActivity<ActivityCarelevoBinding>(R.layout.
     }
 
     private fun setupView() {
-        val type = intent.getIntExtra("type", 0)
-        when (type) {
-            0 -> setFragment(CarelevoPatchConnectionFlowFragment.getInstance())
-            1 -> setFragment(CarelevoCommunicationCheckFragment.getInstance())
+        val screenTypeName = intent.getStringExtra("screenType")
+        val screenType = CarelevoScreenType.valueOf(screenTypeName ?: CarelevoScreenType.CONNECTION_FLOW_START.name)
+        when (screenType) {
+            CarelevoScreenType.CONNECTION_FLOW_START -> setFragment(CarelevoPatchConnectionFlowFragment.getInstance())
+            CarelevoScreenType.COMMUNICATION_CHECK -> setFragment(CarelevoCommunicationCheckFragment.getInstance())
+            CarelevoScreenType.PATCH_DISCARD -> Unit
         }
     }
 

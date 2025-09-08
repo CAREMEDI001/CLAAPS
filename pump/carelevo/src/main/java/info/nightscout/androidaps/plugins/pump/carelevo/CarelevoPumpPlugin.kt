@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.pump.carelevo.ble.data.isDiscoverClear
 import info.nightscout.androidaps.plugins.pump.carelevo.ble.data.isReInitialized
 import info.nightscout.androidaps.plugins.pump.carelevo.ble.data.shouldBeConnected
 import info.nightscout.androidaps.plugins.pump.carelevo.ble.data.shouldBeDiscovered
+import info.nightscout.androidaps.plugins.pump.carelevo.common.CarelevoAlarmNotifier
 import info.nightscout.androidaps.plugins.pump.carelevo.common.CarelevoObserveReceiver
 import info.nightscout.androidaps.plugins.pump.carelevo.common.CarelevoPatch
 import info.nightscout.androidaps.plugins.pump.carelevo.common.keys.CarelevoBooleanPreferenceKey
@@ -125,7 +126,8 @@ class CarelevoPumpPlugin @Inject constructor(
     private val updateLowInsulinNoticeAmountUseCase: CarelevoUpdateLowInsulinNoticeAmountUseCase,
     private val deleteUserSettingInfoUseCase: CarelevoDeleteUserSettingInfoUseCase,
 
-    private val requestPatchInfusionInfoUseCase: CarelevoRequestPatchInfusionInfoUseCase
+    private val requestPatchInfusionInfoUseCase: CarelevoRequestPatchInfusionInfoUseCase,
+    private val carelevoAlarmNotifier: CarelevoAlarmNotifier
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -203,6 +205,8 @@ class CarelevoPumpPlugin @Inject constructor(
                 }
             }
         )
+        carelevoAlarmNotifier.startObserving()
+
     }
 
     override fun onStop() {
@@ -211,6 +215,7 @@ class CarelevoPumpPlugin @Inject constructor(
         deleteUserSettingInfo()
         pluginDisposable.clear()
         reconnectDisposable.clear()
+        carelevoAlarmNotifier.stopObserving()
     }
 
     private fun updateMaxBolusDose() {
@@ -231,11 +236,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         Log.d("plugin_test", "[CarelevoPumpPlugin::updateMaxBolusDose] response success")
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::updateMaxBolusDose] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::updateMaxBolusDose] response failed")
                     }
                 }
@@ -266,11 +271,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         Log.d("plugin_test", "[CarelevoPumpPlugin::updateLowInsulinNoticeAmount] response success")
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::updateLowInsulinNoticeAmount] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::updateLowInsulinNoticeAmount] response failed")
                     }
                 }
@@ -288,11 +293,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         Log.d("plugin_test", "[CarelevoPumpPlugin::deleteUserSettingInfo] response success")
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::deleteUserSettingInfo] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::deleteUserSettingInfo] response failed")
                     }
                 }
@@ -493,11 +498,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         Log.d("plugin_test", "[CarelevoPumpPlugin::getPumpState] response success")
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::getPumpState] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::getPumpState] response failed")
                     }
                 }
@@ -555,11 +560,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.enacted = true
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::startUpdateBasal] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::startUpdateBasal] response failed")
                     }
                 }
@@ -654,11 +659,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.bolusDelivered = detailedBolusInfo.insulin
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::deliverTreatment] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarlevoPumpPlugin::deliverTreatment] response failed")
                     }
                 }
@@ -683,11 +688,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         Log.d("plugin_test", "[CarelevoPumpPlugin::handleFinishImmeBolus] response success")
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::handleFinishImmeBolus] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::handleFinishImmeBolus] response failed")
                     }
                 }
@@ -711,11 +716,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         isImmeBolusStop = true
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::stopBolusDelivering] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::stopBolusDelivering] response failed")
                     }
                 }
@@ -766,11 +771,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.isTempCancel = false
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::setTempBasalAbsolute] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::setTempBasalAbsolute] response failed")
                     }
                 }
@@ -828,11 +833,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.isTempCancel = false
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::setTempBasalPercent] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::setTempBasalPercent] response failed")
                     }
                 }
@@ -873,11 +878,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.isTempCancel = true
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::cancelTempBasal] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::cancelTempBasal] response failed")
                     }
                 }
@@ -926,11 +931,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.enacted = true
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::setExtendedBolus] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::setExtendedBolus] response failed")
                     }
                 }
@@ -971,11 +976,11 @@ class CarelevoPumpPlugin @Inject constructor(
                         result.isTempCancel = true
                     }
 
-                    is ResponseResult.Error   -> {
+                    is ResponseResult.Error -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::cancelExtendedBolus] response error : ${response.e}")
                     }
 
-                    else                      -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::cancelExtendedBolus] response failed")
                     }
                 }
@@ -1074,7 +1079,7 @@ class CarelevoPumpPlugin @Inject constructor(
                         Log.d("plugin_test", "[CarelevoPumpPlugin::startReconnect] connect result is success")
                     }
 
-                    else                     -> {
+                    else -> {
                         Log.d("plugin_test", "[CarelevoPumpPlugin::startReconnect] connect result is failed")
                         stopReconnect()
                     }
@@ -1090,6 +1095,7 @@ class CarelevoPumpPlugin @Inject constructor(
             }
             .subscribe { btState ->
                 btState.getOrNull()?.let { state ->
+                    Log.d("plugin_test", "[CarelevoPumpPlugin::startReconnect] btState : $state")
                     if (state.shouldBeConnected()) {
                         bleController.execute(DiscoveryService(address))
                             .blockingGet()

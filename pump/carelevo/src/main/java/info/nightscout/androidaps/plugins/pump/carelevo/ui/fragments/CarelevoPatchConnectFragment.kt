@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -75,7 +74,6 @@ class CarelevoPatchConnectFragment : CarelevoBaseFragment<FragmentCarelevoPatchC
             showDialogConnect(address = it.device.address, negativeCallback = {
                 viewModel.startScan()
             }, positiveCallback = {
-                Log.d("connect_test", "[CarelevoConnectPrepareFragment::showConnectDialog] click positive")
                 viewModel.startConnect(sharedViewModel.inputInsulin)
             })
         }

@@ -10,7 +10,8 @@ import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.SafetyCh
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.SetBasalProgramResult.Companion.codeToSetBasalProgramCommand
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.SetBolusProgramResult.Companion.codeToSetBolusProgramCommand
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.StopPumpResult.Companion.codeToStopPumpCommand
-import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.bt.WarningMessageResult.Companion.codeToWarningMessageCommand
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.type.AlarmCause
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.type.AlarmType
 
 internal interface PatchResultModel
 
@@ -149,7 +150,7 @@ data class RetrieveAddressResultModel(
 class RecoveryPatchReportResultModel() : PatchResultModel
 
 data class WarningReportResultModel(
-    val cause: WarningMessageResult,
+    val cause: AlarmCause,
     val value: Int
 ) : PatchResultModel
 
@@ -270,7 +271,8 @@ internal fun createPatchResultModel(response: BtResponse): PatchResultModel? {
         RecoveryPatchReportResultModel()
     } else if (isPatchProtocol(response.command) && response is WarningReportResponse) {
         WarningReportResultModel(
-            response.cause.codeToWarningMessageCommand(),
+            //response.cause.codeToWarningMessageCommand(),
+            AlarmCause.fromTypeAndCode(AlarmType.fromCode(response.value), response.cause),
             response.value
         )
     } else if (isPatchProtocol(response.command) && response is AlertReportResponse) {

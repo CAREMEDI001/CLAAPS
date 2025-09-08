@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.carelevo.di
 import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.Module
 import dagger.Provides
+import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoAlarmInfoDao
+import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoAlarmInfoDaoImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoInfusionInfoDao
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoInfusionInfoDaoImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoPatchInfoDao
@@ -17,8 +19,8 @@ class CarelevoDaoModule {
     @Provides
     @Singleton
     fun provideCarelevoInfusionInfoDao(
-        prefManager : SP
-    ) : CarelevoInfusionInfoDao {
+        prefManager: SP
+    ): CarelevoInfusionInfoDao {
         return CarelevoInfusionInfoDaoImpl(
             prefManager
         )
@@ -27,8 +29,8 @@ class CarelevoDaoModule {
     @Provides
     @Singleton
     fun provideCarelevoPatchInfoDao(
-        prefManager : SP
-    ) : CarelevoPatchInfoDao {
+        prefManager: SP
+    ): CarelevoPatchInfoDao {
         return CarelevoPatchInfoDaoImpl(
             prefManager
         )
@@ -37,9 +39,19 @@ class CarelevoDaoModule {
     @Provides
     @Singleton
     fun provideCarelevoUserSettingInfoDao(
-        prefManager : SP
-    ) : CarelevoUserSettingInfoDao {
+        prefManager: SP
+    ): CarelevoUserSettingInfoDao {
         return CarelevoUserSettingInfoDaoImpl(
+            prefManager
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideCarelevoAlarmInfoDao(
+        prefManager: SP
+    ): CarelevoAlarmInfoDao {
+        return CarelevoAlarmInfoDaoImpl(
             prefManager
         )
     }

@@ -3,12 +3,14 @@ package info.nightscout.androidaps.plugins.pump.carelevo.di
 import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.CarelevoPatchObserver
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoAlarmInfoRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoBasalRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoBolusRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoInfusionInfoRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoPatchInfoRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoPatchRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoUserSettingInfoRepository
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.basal.CarelevoCancelTempBasalInfusionUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.basal.CarelevoStartTempBasalInfusionUseCase
@@ -21,12 +23,12 @@ import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.bolus.Car
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
-import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoConnectNewPatchUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchCannulaInsertionCheckUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchCannulaInsertionConfirmUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchDiscardUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchSafetyCheckUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoRequestPatchInfusionInfoUseCase
@@ -41,10 +43,10 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoConnectNewPatchUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository
-    ) : CarelevoConnectNewPatchUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository
+    ): CarelevoConnectNewPatchUseCase {
         return CarelevoConnectNewPatchUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -54,8 +56,8 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoInfusionInfoMonitorUseCase(
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository
-    ) : CarelevoInfusionInfoMonitorUseCase {
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoInfusionInfoMonitorUseCase {
         return CarelevoInfusionInfoMonitorUseCase(
             carelevoInfusionInfoRepository
         )
@@ -63,8 +65,8 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchInfoMonitorUseCase(
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository
-    ) : CarelevoPatchInfoMonitorUseCase {
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository
+    ): CarelevoPatchInfoMonitorUseCase {
         return CarelevoPatchInfoMonitorUseCase(
             carelevoPatchInfoRepository
         )
@@ -72,8 +74,8 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoUserSettingInfoMonitorUseCase(
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoUserSettingInfoMonitorUseCase {
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoUserSettingInfoMonitorUseCase {
         return CarelevoUserSettingInfoMonitorUseCase(
             carelevoUserSettingInfoRepository
         )
@@ -83,11 +85,11 @@ class CarelevoUseCaseModule {
     // about basal
     @Provides
     fun provideCarelevoSetBasalProgramUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoBasalRepository : CarelevoBasalRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository
-    ) : CarelevoSetBasalProgramUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoBasalRepository: CarelevoBasalRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoSetBasalProgramUseCase {
         return CarelevoSetBasalProgramUseCase(
             carelevoPatchObserver,
             carelevoBasalRepository,
@@ -98,11 +100,11 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoUpdateBasalProgramUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoBasalRepository : CarelevoBasalRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository
-    ) : CarelevoUpdateBasalProgramUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoBasalRepository: CarelevoBasalRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoUpdateBasalProgramUseCase {
         return CarelevoUpdateBasalProgramUseCase(
             carelevoPatchObserver,
             carelevoBasalRepository,
@@ -113,11 +115,11 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoStartTempBasalInfusionUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoBasalRepository : CarelevoBasalRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository
-    ) : CarelevoStartTempBasalInfusionUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoBasalRepository: CarelevoBasalRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoStartTempBasalInfusionUseCase {
         return CarelevoStartTempBasalInfusionUseCase(
             carelevoPatchObserver,
             carelevoBasalRepository,
@@ -128,11 +130,11 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoCancelTempBasalInfusionUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoBasalRepository : CarelevoBasalRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository
-    ) : CarelevoCancelTempBasalInfusionUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoBasalRepository: CarelevoBasalRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoCancelTempBasalInfusionUseCase {
         return CarelevoCancelTempBasalInfusionUseCase(
             carelevoPatchObserver,
             carelevoBasalRepository,
@@ -145,11 +147,11 @@ class CarelevoUseCaseModule {
     // about bolus
     @Provides
     fun provideCarelevoStartImmeBolusInfusionUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoBolusRepository : CarelevoBolusRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository  :CarelevoInfusionInfoRepository
-    ) : CarelevoStartImmeBolusInfusionUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoBolusRepository: CarelevoBolusRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoStartImmeBolusInfusionUseCase {
         return CarelevoStartImmeBolusInfusionUseCase(
             carelevoPatchObserver,
             carelevoBolusRepository,
@@ -160,11 +162,11 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoStartExtendBolusInfusionUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoBolusRepository : CarelevoBolusRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository
-    ) : CarelevoStartExtendBolusInfusionUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoBolusRepository: CarelevoBolusRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
+    ): CarelevoStartExtendBolusInfusionUseCase {
         return CarelevoStartExtendBolusInfusionUseCase(
             carelevoPatchObserver,
             carelevoBolusRepository,
@@ -175,11 +177,11 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoCancelImmeBolusInfusionUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
+        carelevoPatchObserver: CarelevoPatchObserver,
         carelevoBolusRepository: CarelevoBolusRepository,
         carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
         carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
-    ) : CarelevoCancelImmeBolusInfusionUseCase {
+    ): CarelevoCancelImmeBolusInfusionUseCase {
         return CarelevoCancelImmeBolusInfusionUseCase(
             carelevoPatchObserver,
             carelevoBolusRepository,
@@ -190,11 +192,11 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoCancelExtendBolusInfusionUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
+        carelevoPatchObserver: CarelevoPatchObserver,
         carelevoBolusRepository: CarelevoBolusRepository,
         carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
         carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
-    ) : CarelevoCancelExtendBolusInfusionUseCase {
+    ): CarelevoCancelExtendBolusInfusionUseCase {
         return CarelevoCancelExtendBolusInfusionUseCase(
             carelevoPatchObserver,
             carelevoBolusRepository,
@@ -207,7 +209,7 @@ class CarelevoUseCaseModule {
     fun provideCarelevoFinishImmeBolusInfusionUseCase(
         carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
         carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
-    ) : CarelevoFinishImmeBolusInfusionUseCase {
+    ): CarelevoFinishImmeBolusInfusionUseCase {
         return CarelevoFinishImmeBolusInfusionUseCase(
             carelevoPatchInfoRepository,
             carelevoInfusionInfoRepository
@@ -218,11 +220,11 @@ class CarelevoUseCaseModule {
     // about user setting info
     @Provides
     fun provideCarelevoUpdateMaxBolusDoseUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository,
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoUpdateMaxBolusDoseUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository,
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoUpdateMaxBolusDoseUseCase {
         return CarelevoUpdateMaxBolusDoseUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -233,10 +235,10 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoUpdateLowInsulinNoticeAmountUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoUpdateLowInsulinNoticeAmountUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoUpdateLowInsulinNoticeAmountUseCase {
         return CarelevoUpdateLowInsulinNoticeAmountUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -246,8 +248,8 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoDeleteUserSettingInfoUseCase(
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoDeleteUserSettingInfoUseCase {
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoDeleteUserSettingInfoUseCase {
         return CarelevoDeleteUserSettingInfoUseCase(
             carelevoUserSettingInfoRepository
         )
@@ -255,8 +257,8 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoCreateUserSettingInfoUseCase(
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoCreateUserSettingInfoUseCase {
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoCreateUserSettingInfoUseCase {
         return CarelevoCreateUserSettingInfoUseCase(
             carelevoUserSettingInfoRepository
         )
@@ -266,8 +268,8 @@ class CarelevoUseCaseModule {
     // about patch
     @Provides
     fun provideCarelevoRequestPatchInfusionInfoUseCase(
-        carelevoPatchRepository : CarelevoPatchRepository
-    ) : CarelevoRequestPatchInfusionInfoUseCase {
+        carelevoPatchRepository: CarelevoPatchRepository
+    ): CarelevoRequestPatchInfusionInfoUseCase {
         return CarelevoRequestPatchInfusionInfoUseCase(
             carelevoPatchRepository
         )
@@ -275,8 +277,8 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchRptInfusionInfoProcessUseCase(
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository
-    ) : CarelevoPatchRptInfusionInfoProcessUseCase {
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository
+    ): CarelevoPatchRptInfusionInfoProcessUseCase {
         return CarelevoPatchRptInfusionInfoProcessUseCase(
             carelevoPatchInfoRepository
         )
@@ -284,12 +286,12 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchDiscardUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository,
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoPatchDiscardUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository,
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoPatchDiscardUseCase {
         return CarelevoPatchDiscardUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -301,10 +303,10 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchForceDiscardUseCase(
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
-        carelevoInfusionInfoRepository : CarelevoInfusionInfoRepository,
-        carelevoUserSettingInfoRepository : CarelevoUserSettingInfoRepository
-    ) : CarelevoPatchForceDiscardUseCase {
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
+        carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository,
+        carelevoUserSettingInfoRepository: CarelevoUserSettingInfoRepository
+    ): CarelevoPatchForceDiscardUseCase {
         return CarelevoPatchForceDiscardUseCase(
             carelevoPatchInfoRepository,
             carelevoInfusionInfoRepository,
@@ -314,10 +316,10 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchSafetyCheckUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository
-    ) : CarelevoPatchSafetyCheckUseCase {
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository
+    ): CarelevoPatchSafetyCheckUseCase {
         return CarelevoPatchSafetyCheckUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -327,10 +329,10 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchCannulaInsertionCheckUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
         carelevoPatchInfoRepository: CarelevoPatchInfoRepository
-    ) : CarelevoPatchCannulaInsertionCheckUseCase {
+    ): CarelevoPatchCannulaInsertionCheckUseCase {
         return CarelevoPatchCannulaInsertionCheckUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -340,10 +342,10 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPatchCannulaInsertionConfirmUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
+        carelevoPatchObserver: CarelevoPatchObserver,
         carelevoPatchRepository: CarelevoPatchRepository,
         carelevoPatchInfoRepository: CarelevoPatchInfoRepository
-    ) : CarelevoPatchCannulaInsertionConfirmUseCase {
+    ): CarelevoPatchCannulaInsertionConfirmUseCase {
         return CarelevoPatchCannulaInsertionConfirmUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -355,11 +357,11 @@ class CarelevoUseCaseModule {
     // about infusion
     @Provides
     fun provideCarelevoPumpResumeUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
-        carelevoPatchRepository : CarelevoPatchRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
+        carelevoPatchObserver: CarelevoPatchObserver,
+        carelevoPatchRepository: CarelevoPatchRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
         carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
-    ) : CarelevoPumpResumeUseCase {
+    ): CarelevoPumpResumeUseCase {
         return CarelevoPumpResumeUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
@@ -370,16 +372,23 @@ class CarelevoUseCaseModule {
 
     @Provides
     fun provideCarelevoPumpStopUseCase(
-        carelevoPatchObserver : CarelevoPatchObserver,
+        carelevoPatchObserver: CarelevoPatchObserver,
         carelevoPatchRepository: CarelevoPatchRepository,
-        carelevoPatchInfoRepository : CarelevoPatchInfoRepository,
+        carelevoPatchInfoRepository: CarelevoPatchInfoRepository,
         carelevoInfusionInfoRepository: CarelevoInfusionInfoRepository
-    ) : CarelevoPumpStopUseCase {
+    ): CarelevoPumpStopUseCase {
         return CarelevoPumpStopUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
             carelevoPatchInfoRepository,
             carelevoInfusionInfoRepository
         )
+    }
+
+    @Provides
+    fun provideCarelevoAlarmInfoUseCase(
+        carelevoAlarmInfoRepository: CarelevoAlarmInfoRepository
+    ): CarelevoAlarmInfoUseCase {
+        return CarelevoAlarmInfoUseCase(carelevoAlarmInfoRepository)
     }
 }

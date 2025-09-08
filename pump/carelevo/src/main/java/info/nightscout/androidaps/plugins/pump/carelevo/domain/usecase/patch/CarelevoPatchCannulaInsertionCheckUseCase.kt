@@ -18,12 +18,12 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 
 class CarelevoPatchCannulaInsertionCheckUseCase @Inject constructor(
-    private val patchObserver : CarelevoPatchObserver,
-    private val patchRepository : CarelevoPatchRepository,
-    private val patchInfoRepository : CarelevoPatchInfoRepository
+    private val patchObserver: CarelevoPatchObserver,
+    private val patchRepository: CarelevoPatchRepository,
+    private val patchInfoRepository: CarelevoPatchInfoRepository
 ) {
 
-    fun execute() : Single<ResponseResult<CarelevoUseCaseResponse>> {
+    fun execute(): Single<ResponseResult<CarelevoUseCaseResponse>> {
         return Single.fromCallable {
             runCatching {
                 patchRepository.requestCannulaInsertionCheck()
@@ -35,7 +35,7 @@ class CarelevoPatchCannulaInsertionCheckUseCase @Inject constructor(
                     .ofType<CannulaInsertionResultModel>()
                     .blockingFirst()
 
-                if(requestCannulaInsertionResult.result == Result.SUCCESS) {
+                if (requestCannulaInsertionResult.result == Result.SUCCESS) {
                     patchRepository.requestConfirmCannulaInsertionCheck(true)
                         .blockingGet()
                         .takeIf { it is RequestResult.Pending }
@@ -45,13 +45,13 @@ class CarelevoPatchCannulaInsertionCheckUseCase @Inject constructor(
                         .ofType<CannulaInsertionAckResultModel>()
                         .blockingFirst()
 
-                    if(requestConfirmCannulaInsertionResult.result == Result.SUCCESS) {
+                    if (requestConfirmCannulaInsertionResult.result == Result.SUCCESS) {
                         val patchInfo = patchInfoRepository.getPatchInfoBySync()
                             ?: throw NullPointerException("patch info must be not null")
                         val updatePatchInfoResult = patchInfoRepository.updatePatchInfo(
                             patchInfo.copy(updatedAt = DateTime.now(), checkNeedle = true)
                         )
-                        if(!updatePatchInfoResult) {
+                        if (!updatePatchInfoResult) {
                             throw IllegalStateException("update patch info is failed")
                         }
 
@@ -60,9 +60,9 @@ class CarelevoPatchCannulaInsertionCheckUseCase @Inject constructor(
                         val patchInfo = patchInfoRepository.getPatchInfoBySync()
                             ?: throw NullPointerException("patch info must be not null")
                         val updatePatchInfoResult = patchInfoRepository.updatePatchInfo(
-                            patchInfo.copy(updatedAt = DateTime.now(), checkNeedle = false)
+                            patchInfo.copy(updatedAt = DateTime.now(), checkNeedle = false, needleFailedCount = patchInfo.needleFailedCount)
                         )
-                        if(!updatePatchInfoResult) {
+                        if (!updatePatchInfoResult) {
                             throw IllegalStateException("update patch info is failed")
                         }
                         ResultFailed
@@ -74,19 +74,19 @@ class CarelevoPatchCannulaInsertionCheckUseCase @Inject constructor(
                         ?: throw IllegalStateException("request confirm cannula insertion is not pending")
 
                     val requestConfirmCannulaInsertionResult = patchObserver.patchEvent
-                        .ofType<CannulaInsertionResultModel>()
+                        .ofType<CannulaInsertionAckResultModel>()
                         .blockingFirst()
 
-                    if(requestConfirmCannulaInsertionResult.result != Result.SUCCESS) {
+                    if (requestConfirmCannulaInsertionResult.result != Result.SUCCESS) {
                         throw IllegalStateException("request confirm cannula insertion result is failed")
                     }
 
                     val patchInfo = patchInfoRepository.getPatchInfoBySync()
                         ?: throw NullPointerException("patch info must be not null")
                     val updatePatchInfoResult = patchInfoRepository.updatePatchInfo(
-                        patchInfo.copy(updatedAt = DateTime.now(), checkNeedle = false)
+                        patchInfo.copy(updatedAt = DateTime.now(), checkNeedle = false, needleFailedCount = (patchInfo.needleFailedCount ?: 0) + 1)
                     )
-                    if(!updatePatchInfoResult) {
+                    if (!updatePatchInfoResult) {
                         throw IllegalStateException("update patch info is failed")
                     }
                     ResultFailed

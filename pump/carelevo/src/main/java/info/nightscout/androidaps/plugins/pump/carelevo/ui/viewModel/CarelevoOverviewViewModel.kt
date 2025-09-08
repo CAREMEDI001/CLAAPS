@@ -1,11 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -19,12 +22,15 @@ import info.nightscout.androidaps.plugins.pump.carelevo.common.model.PatchState
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.State
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.UiState
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.ResponseResult
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.patch.CarelevoPatchInfoDomainModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoPumpResumeUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.model.CarelevoPumpStopRequestModel
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchDiscardUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoRequestPatchInfusionInfoUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoOverviewEvent
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoOverviewUiModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +39,7 @@ import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.jvm.optionals.getOrNull
@@ -41,18 +48,19 @@ class CarelevoOverviewViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
     private val commandQueue: CommandQueue,
-
+    private val aapsLogger: AAPSLogger,
     private val carelevoPatch: CarelevoPatch,
     private val bleController: CarelevoBleController,
     private val aapsSchedulers: AapsSchedulers,
     private val patchDiscardUseCase: CarelevoPatchDiscardUseCase,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val pumpStopUseCase: CarelevoPumpStopUseCase,
-    private val pumpResumeUseCase: CarelevoPumpResumeUseCase
+    private val pumpResumeUseCase: CarelevoPumpResumeUseCase,
+    private val requestPatchInfusionInfoUseCase: CarelevoRequestPatchInfusionInfoUseCase
 ) : ViewModel() {
 
-    private val _bleState = MutableLiveData<Boolean?>(null)
-    val bleState get() = _bleState
+    private val _bleState = MutableLiveData<PatchState?>()
+    val bleState: LiveData<PatchState?> get() = _bleState
 
     private val _serialNumber = MutableLiveData<String>()
     val serialNumber get() = _serialNumber
@@ -101,56 +109,78 @@ class CarelevoOverviewViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    init {
-        Log.d("connect_test", "[CarelevoOverviewViewModel::init] init called")
-        Log.d("connect_test", "[CarelevoOverviewViewModel::init] compositeDisposable is disposed : ${compositeDisposable.isDisposed}")
-    }
-
     fun setIsCreated(isCreated: Boolean) {
         _isCreated = isCreated
     }
 
     fun observePatchInfo() {
         compositeDisposable += carelevoPatch.patchInfo
-            .doOnError {
-                Log.d("connect_test", "[CarelevoOverviewViewModel::observePatchInfo] doOnError called : $it")
-            }
+            .observeOn(aapsSchedulers.io)
+            .filter { it != null }
+            .map { info -> buildUi(info.getOrNull() ?: error("Patch is Null.")) }
             .observeOn(aapsSchedulers.main)
-            .subscribe { result ->
-                Log.d("connect_test", "[CarelevoOverviewViewModel::observePatchInfo] info : $result")
+            .subscribe(
+                { ui ->
+                    aapsLogger.debug(LTag.PUMP, "[Overview] $ui")
+                    _serialNumber.value = ui.serialNumber
+                    _lotNumber.value = ui.lotNumber
+                    _bootDateTime.value = ui.bootDateTimeUi
+                    _expirationTime.value = ui.expirationTime
+                    _infusionStatus.value = ui.infusionStatus
+                    _insulinRemains.value = ui.insulinRemainText
+                    _totalDeliveredBasalAmount.value = ui.totalBasal
+                    _totalDeliveredBolusAmount.value = ui.totalBolus
+                    _isPumpStop.value = ui.isPumpStopped
+                    _runningRemainMinutes.value = ui.runningRemainMinutes
+                },
+                { e ->
+                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchInfo] onError", e)
+                }
+            )
+    }
 
-                val info = result.getOrNull() ?: return@subscribe
-                Log.d("connect_test", "[CarelevoOverviewViewModel::observePatchInfo] info : $info")
-                _serialNumber.value = info.manufactureNumber ?: ""
-                _lotNumber.value = info.firmwareVersion ?: ""
-                _bootDateTime.value = parseBootDateTime(info.bootDateTime).toString()
-                _expirationTime.value = info.thresholdExpiry
-                _infusionStatus.value = info.mode
-                _insulinRemains.value = "${info.insulinRemain} / ${info.insulinAmount} U"
-                _totalDeliveredBasalAmount.value = (info.infusedTotalBasalAmount ?: 0.0).toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
-                _totalDeliveredBolusAmount.value = (info.infusedTotalBolusAmount ?: 0.0).toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
-                _isPumpStop.value = info.isStopped ?: false
-                _runningRemainMinutes.value = info.runningMinutes ?: 0
+    private fun buildUi(info: CarelevoPatchInfoDomainModel): CarelevoOverviewUiModel {
+        val bootLdt = parseBootDateTime(info.bootDateTime)
+        val bootUi = bootLdt?.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")) ?: ""
 
-            }
+        val infusedBasal = (info.infusedTotalBasalAmount ?: 0.0)
+            .toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+        val infusedBolus = (info.infusedTotalBolusAmount ?: 0.0)
+            .toBigDecimal().setScale(2, RoundingMode.HALF_UP).toDouble()
+
+        val remainMinutes = bootLdt?.let { getRemainMin(it) } ?: 0
+
+        return CarelevoOverviewUiModel(
+            serialNumber = info.manufactureNumber.orEmpty(),
+            lotNumber = info.firmwareVersion.orEmpty(),
+            bootDateTimeUi = bootUi,
+            expirationTime = info.thresholdExpiry,
+            infusionStatus = info.mode,
+            insulinRemainText = "${info.insulinRemain} / ${info.insulinAmount} U",
+            totalBasal = infusedBasal,
+            totalBolus = infusedBolus,
+            isPumpStopped = info.isStopped ?: false,
+            runningRemainMinutes = remainMinutes
+        )
     }
 
     fun observePatchState() {
         compositeDisposable += carelevoPatch.patchState
-            .doOnError {
-                Log.d("connect_test", "[CarelevoOverviewViewModel::observePatchState] doOnError called : $it")
-            }
             .observeOn(aapsSchedulers.main)
-            .subscribe {
-                Log.d("connect_test", "[CarelevoOverviewViewModel::observePatchState] state : ${it.getOrNull()}")
-                it?.getOrNull()?.let { patchState ->
-                    when (patchState) {
-                        is PatchState.ConnectedBooted -> _bleState.value = true
-                        is PatchState.NotConnectedNotBooting -> _bleState.value = null
-                        else -> _bleState.value = false
+            .subscribe(
+                { response ->
+                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchState] state : ${response.getOrNull()}")
+                    response?.getOrNull()?.let { patchState ->
+                        _bleState.value = patchState
+                        if (patchState == PatchState.NotConnectedNotBooting) {
+                            onDisconnectValue()
+                        }
                     }
+                },
+                {
+                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::observePatchState] doOnError called : $it")
                 }
-            }
+            )
     }
 
     fun observeInfusionInfo() {
@@ -191,23 +221,27 @@ class CarelevoOverviewViewModel @Inject constructor(
             is CarelevoOverviewEvent.StopPumpFailed -> event
 
             is CarelevoOverviewEvent.ClickPumpStopResumeBtn -> {
-                when (carelevoPatch.getPatchState()) {
-                    is PatchState.NotConnectedNotBooting -> {
-                        CarelevoOverviewEvent.ShowMessageCarelevoIsNotConnected
-                    }
-
-                    else -> {
-                        val isStop = carelevoPatch.patchInfo.value?.get()?.isStopped ?: false
-                        if (isStop) {
-                            CarelevoOverviewEvent.ShowPumpResumeDialog
-                        } else {
-                            CarelevoOverviewEvent.ShowPumpStopDurationSelectDialog
-                        }
-                    }
-                }
+                resolvePumpStopResumeEvent()
             }
 
             else -> CarelevoOverviewEvent.NoAction
+        }
+    }
+
+    private fun resolvePumpStopResumeEvent(): CarelevoOverviewEvent {
+        return when (carelevoPatch.getPatchState()) {
+            is PatchState.NotConnectedNotBooting -> {
+                CarelevoOverviewEvent.ShowMessageCarelevoIsNotConnected
+            }
+
+            else -> {
+                val isStop = carelevoPatch.patchInfo.value?.get()?.isStopped ?: false
+                if (isStop) {
+                    CarelevoOverviewEvent.ShowPumpResumeDialog
+                } else {
+                    CarelevoOverviewEvent.ShowPumpStopDurationSelectDialog
+                }
+            }
         }
     }
 
@@ -229,72 +263,47 @@ class CarelevoOverviewViewModel @Inject constructor(
         setUiState(UiState.Loading)
         compositeDisposable += patchDiscardUseCase.execute()
             .timeout(3000L, TimeUnit.MILLISECONDS)
-            .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
-            .doOnError {
-                Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchDiscard] doOnError called : $it")
-                setUiState(UiState.Idle)
+            .observeOn(aapsSchedulers.main)
+            .subscribe(
+                { response -> handlePatchDiscardResponse(response) },
+                { error -> handlePatchDiscardError(error) }
+            )
+    }
+
+    private fun handlePatchDiscardResponse(response: ResponseResult<*>) {
+        when (response) {
+            is ResponseResult.Success -> {
+                aapsLogger.debug(LTag.PUMP, "[startPatchDiscard] success")
+                bleController.unBondDevice()
+                carelevoPatch.releasePatch()
+                triggerEvent(CarelevoOverviewEvent.DiscardComplete)
+            }
+
+            else -> {
+                aapsLogger.debug(LTag.PUMP, "[startPatchDiscard] failed or error")
                 triggerEvent(CarelevoOverviewEvent.DiscardFailed)
             }
-            .subscribe { response ->
-                when (response) {
-                    is ResponseResult.Success -> {
-                        Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchDiscard] response success")
-                        bleController.unBondDevice()
-                        carelevoPatch.releasePatch()
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.DiscardComplete)
-                    }
+        }
+        setUiState(UiState.Idle)
+    }
 
-                    is ResponseResult.Error -> {
-                        Log.d("connect_test", "[CarelevoOverviewVewModel::startPatchDiscard] response error : ${response.e}")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.DiscardFailed)
-                    }
-
-                    else -> {
-                        Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchDiscard] response failed")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.DiscardFailed)
-                    }
-                }
-            }
+    private fun handlePatchDiscardError(error: Throwable) {
+        aapsLogger.debug(LTag.PUMP, "[startPatchDiscard] error: $error")
+        setUiState(UiState.Idle)
+        triggerEvent(CarelevoOverviewEvent.DiscardFailed)
     }
 
     private fun startPatchForceDiscard() {
         setUiState(UiState.Loading)
         compositeDisposable += patchForceDiscardUseCase.execute()
             .timeout(3000L, TimeUnit.MILLISECONDS)
-            .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
-            .doOnError {
-                Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchForceDiscard] doOnError called : $it")
-                setUiState(UiState.Idle)
-                triggerEvent(CarelevoOverviewEvent.DiscardFailed)
-            }
-            .subscribe { response ->
-                when (response) {
-                    is ResponseResult.Success -> {
-                        Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchForceDiscard] response success")
-                        bleController.unBondDevice()
-                        carelevoPatch.releasePatch()
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.DiscardComplete)
-                    }
-
-                    is ResponseResult.Error -> {
-                        Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchForceDiscard] response error : ${response.e}")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.DiscardFailed)
-                    }
-
-                    else -> {
-                        Log.d("connect_test", "[CarelevoOverviewViewModel::startPatchForceDiscard] response failed")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.DiscardFailed)
-                    }
-                }
-            }
+            .observeOn(aapsSchedulers.main)
+            .subscribe(
+                { response -> handlePatchDiscardResponse(response) },
+                { error -> handlePatchDiscardError(error) }
+            )
     }
 
     fun startPumpStopProcess(stopMinute: Int) {
@@ -320,8 +329,8 @@ class CarelevoOverviewViewModel @Inject constructor(
             true
         }
 
-        Log.d("stop_pump_test", "[CarelevoOverviewViewModel::startPumpStopProcess] cancelTempBasalResult : $cancelTempBasalResult")
-        Log.d("stop_pump_test", "[CarelevoOverviewViewModel::startPumpStopProcess] cancelExtendBolusResult : $cancelExtendBolusResult")
+        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] cancelTempBasalResult : $cancelTempBasalResult")
+        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] cancelExtendBolusResult : $cancelExtendBolusResult")
 
         if (cancelExtendBolusResult && cancelTempBasalResult) {
             compositeDisposable += pumpStopUseCase.execute(
@@ -333,14 +342,14 @@ class CarelevoOverviewViewModel @Inject constructor(
                 .observeOn(aapsSchedulers.io)
                 .subscribeOn(aapsSchedulers.io)
                 .doOnError {
-                    Log.d("stop_pump_test", "[CarelevoOverviewViewModel::startPumpStopProcess] doOnError called : $it")
+                    aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] doOnError called : $it")
                     setUiState(UiState.Idle)
                     triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                 }
                 .subscribe { response ->
                     when (response) {
                         is ResponseResult.Success -> {
-                            Log.d("stop_pump_test", "[CarelevoOverviewViewModel::startPumpStopProcess] response success")
+                            aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] response success")
                             pumpSync.syncTemporaryBasalWithPumpId(
                                 timestamp = dateUtil.now(),
                                 rate = 0.0,
@@ -356,20 +365,20 @@ class CarelevoOverviewViewModel @Inject constructor(
                         }
 
                         is ResponseResult.Error -> {
-                            Log.d("stop_pump_test", "[CarelevoOverviewViewModel::startPumpStopProcess] response error ${response.e}")
+                            aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] response error ${response.e}")
                             setUiState(UiState.Idle)
                             triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                         }
 
                         else -> {
-                            Log.d("stop_pump_test", "[CarelevoOverviewViewModel::startPumpStopProcess] response failed")
+                            aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] response failed")
                             setUiState(UiState.Idle)
                             triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
                         }
                     }
                 }
         } else {
-            Log.d("pump_stop_test", "[CarelevoOverviewViewModel::startPumpStopProcess] cancel temp or cancel extend failed")
+            aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpStopProcess] cancel temp or cancel extend failed")
             setUiState(UiState.Idle)
             triggerEvent(CarelevoOverviewEvent.StopPumpFailed)
         }
@@ -400,14 +409,14 @@ class CarelevoOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                Log.d("resume_pump_test", "[CarelevoOverviewViewModel::startPumpResume] doOnError called : $it")
+                aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpResume] doOnError called : $it")
                 setUiState(UiState.Idle)
                 triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
             }
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        Log.d("resume_pump_test", "[CarlevoOverviewViewModel::startPumpResume] response success")
+                        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpResume] response success")
                         pumpSync.syncStopTemporaryBasalWithPumpId(
                             timestamp = dateUtil.now(),
                             endPumpId = dateUtil.now(),
@@ -418,14 +427,8 @@ class CarelevoOverviewViewModel @Inject constructor(
                         triggerEvent(CarelevoOverviewEvent.ResumePumpComplete)
                     }
 
-                    is ResponseResult.Error -> {
-                        Log.d("resume_pump_test", "[CarelevoOverviewViewModel::startPumpResume] response error : ${response.e}")
-                        setUiState(UiState.Idle)
-                        triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
-                    }
-
                     else -> {
-                        Log.d("resume_pump_test", "[CarelevoOverviewViewModel::startPumpResume] response failed")
+                        aapsLogger.debug(LTag.PUMP, "[CarelevoOverviewViewModel::startPumpResume] response failed")
                         setUiState(UiState.Idle)
                         triggerEvent(CarelevoOverviewEvent.ResumePumpFailed)
                     }
@@ -433,24 +436,76 @@ class CarelevoOverviewViewModel @Inject constructor(
             }
     }
 
-    fun parseBootDateTime(raw: String?): String? {
+    fun parseBootDateTime(raw: String?): LocalDateTime? {
         if (raw.isNullOrBlank()) {
-            return "-"
+            return null
         }
         return try {
             val formatter = DateTimeFormatter.ofPattern("yyMMddHHmm")
-            val dateTime = LocalDateTime.parse(raw, formatter)
-
-            dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))
+            LocalDateTime.parse(raw, formatter)
         } catch (e: Exception) {
-            "-"
+            e.printStackTrace()
+            null
         }
     }
 
+    private fun onDisconnectValue() {
+        _serialNumber.value = ""
+        _lotNumber.value = ""
+        _bootDateTime.value = ""
+        _expirationTime.value = 0
+        _infusionStatus.value = 0
+        _insulinRemains.value = ""
+        _totalDeliveredBasalAmount.value = 0.0
+        _totalDeliveredBolusAmount.value = 0.0
+        _isPumpStop.value = false
+        _runningRemainMinutes.value = 0
+        _tempBasalRate.value = "0.0"
+        _basalRate.value = 0.0
+    }
+
+    private fun getRemainMin(createdAt: LocalDateTime): Int {
+        val endAt = createdAt.plusDays(7)
+        var remainMin = ChronoUnit.MINUTES.between(LocalDateTime.now(), endAt)
+
+        if (LocalDateTime.now().isAfter(endAt)) {
+            remainMin = ChronoUnit.MINUTES.between(endAt, LocalDateTime.now())
+        }
+
+        return remainMin.toInt()
+    }
+
+    fun refreshPatchInfusionInfo() {
+        if (!carelevoPatch.isBluetoothEnabled()) {
+            return
+        }
+        if (!carelevoPatch.isCarelevoConnected()) {
+            return
+        }
+
+        compositeDisposable += requestPatchInfusionInfoUseCase.execute()
+            .observeOn(aapsSchedulers.io)
+            .subscribeOn(aapsSchedulers.io)
+            .timeout(3000L, TimeUnit.MILLISECONDS)
+            .subscribe { response ->
+                when (response) {
+                    is ResponseResult.Success -> {
+                        Log.d("plugin_test", "[CarelevoOverviewViewModel::InfusionInfo] response success")
+                    }
+
+                    is ResponseResult.Error -> {
+                        Log.d("plugin_test", "[CarelevoOverviewViewModel::InfusionInfo] response error : ${response.e}")
+                    }
+
+                    else -> {
+                        Log.d("plugin_test", "[CarelevoOverviewViewModel::InfusionInfo] response failed")
+                    }
+                }
+            }
+    }
+
     override fun onCleared() {
-        Log.d("connect_test", "[CarelevoOverviewViewModel::onCleared] onCleared called")
         compositeDisposable.clear()
-        Log.d("connect_test", "[CarelevoOverviewViewModel::onCleared] compositeDisposable is disposed : ${compositeDisposable.isDisposed}")
         super.onCleared()
     }
 }

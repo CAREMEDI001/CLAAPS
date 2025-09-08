@@ -5,9 +5,9 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoCommunicationCheckFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoOverviewFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchAttachFragment
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchCannulaInsertionFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchConnectFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchConnectionFlowFragment
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchNeedleInsertionFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchSafetyCheckFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchStartFragment
 
@@ -40,7 +40,7 @@ abstract class CarelevoFragmentModule {
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesCarelevoConnectCannulaFragment(): CarelevoPatchNeedleInsertionFragment
+    internal abstract fun contributesCarelevoConnectCannulaFragment(): CarelevoPatchCannulaInsertionFragment
 
     @FragmentScope
     @ContributesAndroidInjector

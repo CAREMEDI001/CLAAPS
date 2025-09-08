@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -8,23 +9,23 @@ import info.nightscout.androidaps.plugins.pump.carelevo.R
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.Event
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.State
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.UiState
-import info.nightscout.androidaps.plugins.pump.carelevo.databinding.FragmentCarelevoPatchNeedleInsertionBinding
+import info.nightscout.androidaps.plugins.pump.carelevo.databinding.FragmentCarelevoPatchCannulaInsertionBinding
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.CarelevoBaseCircleProgress
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.CarelevoBaseFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.dialog.TextBottomSheetDialog
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.ext.repeatOnStartedWithViewOwner
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.ext.showDialogDiscardConfirm
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoConnectCannulaEvent
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchNeedleInsertionViewModel
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchCannulaInsertionViewModel
 
-class CarelevoPatchNeedleInsertionFragment : CarelevoBaseFragment<FragmentCarelevoPatchNeedleInsertionBinding>(R.layout.fragment_carelevo_patch_needle_insertion) {
+class CarelevoPatchCannulaInsertionFragment : CarelevoBaseFragment<FragmentCarelevoPatchCannulaInsertionBinding>(R.layout.fragment_carelevo_patch_cannula_insertion) {
 
     companion object {
 
-        fun getInstance(): CarelevoPatchNeedleInsertionFragment = CarelevoPatchNeedleInsertionFragment()
+        fun getInstance(): CarelevoPatchCannulaInsertionFragment = CarelevoPatchCannulaInsertionFragment()
     }
 
-    private val viewModel: CarelevoPatchNeedleInsertionViewModel by viewModels { viewModelFactory }
+    private val viewModel: CarelevoPatchCannulaInsertionViewModel by viewModels { viewModelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,49 +80,55 @@ class CarelevoPatchNeedleInsertionFragment : CarelevoBaseFragment<FragmentCarele
     private fun handleEvent(event: Event) {
         when (event) {
             is CarelevoConnectCannulaEvent.ShowMessageBluetoothNotEnabled -> {
-                ToastUtils.infoToast(requireContext(), "블루투스 연결 상태를 확인해 주세요.")
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_bluetooth_not_enabled))
             }
 
             is CarelevoConnectCannulaEvent.ShowMessageCarelevoIsNotConnected -> {
-                ToastUtils.infoToast(requireContext(), "연결된 패치가 없습니다.")
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_patch_not_connected))
             }
 
             is CarelevoConnectCannulaEvent.ShowMessageProfileNotSet -> {
-                ToastUtils.infoToast(requireContext(), "프로파일이 설정되어 있지 않습니다.")
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_profile_not_set))
             }
 
             is CarelevoConnectCannulaEvent.CheckCannulaComplete -> {
-                // todo dialog
                 if (event.result) {
-                    ToastUtils.infoToast(requireContext(), "바늘 삽입이 완료 되었습니다.")
+                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_cannula_inserted))
                 } else {
-                    ToastUtils.infoToast(requireContext(), "바늘 삽입이 완료 되지 않았습니다.")
+                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_cannula_not_inserted))
                 }
             }
 
             is CarelevoConnectCannulaEvent.CheckCannulaFailed -> {
-                ToastUtils.infoToast(requireContext(), "바늘 삽입 점검 실패했습니다.")
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_cannula_check_failed))
             }
 
             is CarelevoConnectCannulaEvent.DiscardComplete -> {
-                ToastUtils.infoToast(requireContext(), "사용종료 되었습니다.")
-                requireActivity().finish()
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_discard_complete))
+                activityFinish()
             }
 
             is CarelevoConnectCannulaEvent.DiscardFailed -> {
-                ToastUtils.infoToast(requireContext(), "사용종료 실패했습니다.")
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_discard_failed))
             }
 
             is CarelevoConnectCannulaEvent.SetBasalComplete -> {
-                ToastUtils.infoToast(requireContext(), "패치 연결이 완료되었습니다.")
-                requireActivity().finish()
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_set_basal_complete))
+                activityFinish()
             }
 
             is CarelevoConnectCannulaEvent.SetBasalFailed -> {
-                ToastUtils.infoToast(requireContext(), "기저 주입 요청 실패했습니다. 다시 시도해 주세요.")
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_set_basal_failed))
             }
 
             else -> Unit
+        }
+    }
+
+    private fun activityFinish() {
+        requireActivity().apply {
+            setResult(Activity.RESULT_OK)
+            finish()
         }
     }
 

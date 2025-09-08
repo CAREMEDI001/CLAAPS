@@ -3,9 +3,12 @@ package info.nightscout.androidaps.plugins.pump.carelevo.di
 import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.plugins.pump.carelevo.ble.core.CarelevoBleController
+import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoAlarmInfoDao
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoInfusionInfoDao
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoPatchInfoDao
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dao.CarelevoUserSettingInfoDao
+import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoAlarmInfoLocalDataSource
+import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoAlarmInfoLocalDataSourceImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoInfusionInfoDataSource
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoInfusionInfoDataSourceImpl
 import info.nightscout.androidaps.plugins.pump.carelevo.data.dataSource.local.CarelevoPatchInfoDataSource
@@ -25,9 +28,9 @@ class CarelevoDataSourceModule {
 
     @Provides
     fun provideCarelevoBtBasalRemoteDataSource(
-        carelevoBleController : CarelevoBleController,
-        carelevoProtocolParserProvider : CarelevoProtocolParserProvider
-    ) : CarelevoBtBasalRemoteDataSource {
+        carelevoBleController: CarelevoBleController,
+        carelevoProtocolParserProvider: CarelevoProtocolParserProvider
+    ): CarelevoBtBasalRemoteDataSource {
         return CarelevoBtBasalRemoteDataSourceImpl(
             carelevoBleController,
             carelevoProtocolParserProvider
@@ -36,9 +39,9 @@ class CarelevoDataSourceModule {
 
     @Provides
     fun provideCarelevoBolusRemoteDataSource(
-        carelevoBleController : CarelevoBleController,
-        carelevoProtocolParserProvider : CarelevoProtocolParserProvider
-    ) : CarelevoBtBolusRemoteDataSource {
+        carelevoBleController: CarelevoBleController,
+        carelevoProtocolParserProvider: CarelevoProtocolParserProvider
+    ): CarelevoBtBolusRemoteDataSource {
         return CarelevoBtBolusRemoteDataSourceImpl(
             carelevoBleController,
             carelevoProtocolParserProvider
@@ -47,9 +50,9 @@ class CarelevoDataSourceModule {
 
     @Provides
     fun provideCarelevoBtPatchRemoteDataSource(
-        carelevoBleController : CarelevoBleController,
-        carelevoProtocolParserProvider : CarelevoProtocolParserProvider
-    ) : CarelevoBtPatchRemoteDataSource {
+        carelevoBleController: CarelevoBleController,
+        carelevoProtocolParserProvider: CarelevoProtocolParserProvider
+    ): CarelevoBtPatchRemoteDataSource {
         return CarelevoBtPatchRemoteDataSourceImpl(
             carelevoBleController,
             carelevoProtocolParserProvider
@@ -58,8 +61,8 @@ class CarelevoDataSourceModule {
 
     @Provides
     fun provideCarelevoInfusionInfoDataSource(
-        carelevoInfusionInfoDao : CarelevoInfusionInfoDao
-    ) : CarelevoInfusionInfoDataSource {
+        carelevoInfusionInfoDao: CarelevoInfusionInfoDao
+    ): CarelevoInfusionInfoDataSource {
         return CarelevoInfusionInfoDataSourceImpl(
             carelevoInfusionInfoDao
         )
@@ -67,8 +70,8 @@ class CarelevoDataSourceModule {
 
     @Provides
     fun provideCarelevoPatchInfoDataSource(
-        carelevoPatchInfoDao : CarelevoPatchInfoDao
-    ) : CarelevoPatchInfoDataSource {
+        carelevoPatchInfoDao: CarelevoPatchInfoDao
+    ): CarelevoPatchInfoDataSource {
         return CarelevoPatchInfoDataSourceImpl(
             carelevoPatchInfoDao
         )
@@ -76,10 +79,17 @@ class CarelevoDataSourceModule {
 
     @Provides
     fun provideCarelevoUserSettingInfoDataSource(
-        carelevoUserSettingInfoDao : CarelevoUserSettingInfoDao
-    ) : CarelevoUserSettingInfoDataSource {
+        carelevoUserSettingInfoDao: CarelevoUserSettingInfoDao
+    ): CarelevoUserSettingInfoDataSource {
         return CarelevoUserSettingInfoDataSourceImpl(
             carelevoUserSettingInfoDao
         )
+    }
+
+    @Provides
+    fun provideCarelevoAlarmInfoLocalDataSource(
+        dao: CarelevoAlarmInfoDao
+    ): CarelevoAlarmInfoLocalDataSource {
+        return CarelevoAlarmInfoLocalDataSourceImpl(dao)
     }
 }

@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.pump.carelevo.domain.CarelevoPatchObse
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoBasalRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoBolusRepository
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.repository.CarelevoPatchRepository
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoInfusionInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
@@ -27,11 +28,11 @@ class CarelevoManagerModule {
     @Provides
     @Singleton
     fun provideCarelevoPatchObserver(
-        carelevoBasalRepository : CarelevoBasalRepository,
-        carelevoBolusRepository : CarelevoBolusRepository,
-        carelevoPatchRepository : CarelevoPatchRepository,
+        carelevoBasalRepository: CarelevoBasalRepository,
+        carelevoBolusRepository: CarelevoBolusRepository,
+        carelevoPatchRepository: CarelevoPatchRepository,
         aapsSchedulers: AapsSchedulers
-    ) : CarelevoPatchObserver {
+    ): CarelevoPatchObserver {
         return CarelevoPatchObserver(
             carelevoPatchRepository,
             carelevoBasalRepository,
@@ -43,20 +44,21 @@ class CarelevoManagerModule {
     @Provides
     @Singleton
     fun provideCarelevoPatch(
-        carelevoBleController : CarelevoBleController,
-        carelevoPatchObserver : CarelevoPatchObserver,
+        carelevoBleController: CarelevoBleController,
+        carelevoPatchObserver: CarelevoPatchObserver,
         aapsSchedulers: AapsSchedulers,
-        rxBus : RxBus,
-        sp : SP,
-        preferences : Preferences,
+        rxBus: RxBus,
+        sp: SP,
+        preferences: Preferences,
         carelevoInfusionInfoMonitorUseCase: CarelevoInfusionInfoMonitorUseCase,
         carelevoPatchInfoMonitorUseCase: CarelevoPatchInfoMonitorUseCase,
         carelevoUserSettingInfoMonitorUseCase: CarelevoUserSettingInfoMonitorUseCase,
-        carelevoPatchRptInfusionInfoProcessUseCase : CarelevoPatchRptInfusionInfoProcessUseCase,
+        carelevoPatchRptInfusionInfoProcessUseCase: CarelevoPatchRptInfusionInfoProcessUseCase,
         carelevoUpdateMaxBolusDoseUseCase: CarelevoUpdateMaxBolusDoseUseCase,
         carelevoUpdateLowInfusionNoticeAmountUseCase: CarelevoUpdateLowInsulinNoticeAmountUseCase,
-        carelevoCreateUserSettingInfoUserCase : CarelevoCreateUserSettingInfoUseCase
-    ) : CarelevoPatch {
+        carelevoCreateUserSettingInfoUserCase: CarelevoCreateUserSettingInfoUseCase,
+        carelevoAlarmInfoUseCase: CarelevoAlarmInfoUseCase
+    ): CarelevoPatch {
         return CarelevoPatch(
             carelevoBleController,
             carelevoPatchObserver,
@@ -70,7 +72,8 @@ class CarelevoManagerModule {
             carelevoPatchRptInfusionInfoProcessUseCase,
             carelevoUpdateMaxBolusDoseUseCase,
             carelevoUpdateLowInfusionNoticeAmountUseCase,
-            carelevoCreateUserSettingInfoUserCase
+            carelevoCreateUserSettingInfoUserCase,
+            carelevoAlarmInfoUseCase
         )
     }
 }

@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.jvm.optionals.getOrNull
 
-class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
+class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val aapsSchedulers: AapsSchedulers,
     private val carelevoPatch: CarelevoPatch,
@@ -45,6 +45,9 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
 
     private val _isNeedleInsert: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val isNeedleInsert = _isNeedleInsert.asStateFlow()
+
+    private val _patchNeedleFailCount: MutableStateFlow<Int> = MutableStateFlow(0)
+    val patchNeedleFailCount = _patchNeedleFailCount.asStateFlow()
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -95,7 +98,13 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .subscribe {
-                _isNeedleInsert.tryEmit(it?.getOrNull()?.checkNeedle ?: false)
+                val patchInfo = it?.getOrNull()
+                Log.d("observePatchInfo", "patchInfo needle Insert: $patchInfo")
+                _isNeedleInsert.tryEmit(patchInfo?.checkNeedle ?: false)
+                _patchNeedleFailCount.tryEmit(patchInfo?.needleFailedCount ?: 0)
+                // todo
+                // 월요일에 바늘삽입 재시도 다이얼로그
+                // 3회 실패시 알람 바늘삽입오류 알람 발생
             }
     }
 
@@ -111,7 +120,7 @@ class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
 
         setUiState(UiState.Loading)
         compositeDisposable += patchCannulaInsertionCheckUseCase.execute()
-            .timeout(3000L, TimeUnit.MILLISECONDS)
+            .timeout(10000L, TimeUnit.MILLISECONDS)
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {

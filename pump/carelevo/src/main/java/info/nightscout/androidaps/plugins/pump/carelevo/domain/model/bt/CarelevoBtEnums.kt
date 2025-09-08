@@ -5,12 +5,13 @@ enum class Result {
     FAILED;
 
     companion object {
-        fun Result.commandToCode() = when(this) {
+
+        fun Result.commandToCode() = when (this) {
             SUCCESS -> 0
             FAILED -> 1
         }
 
-        fun Int.codeToResultCommand() = when(this) {
+        fun Int.codeToResultCommand() = when (this) {
             0 -> SUCCESS
             1 -> FAILED
             else -> FAILED
@@ -30,19 +31,20 @@ enum class SafetyCheckResult {
     FAILED;
 
     companion object {
-        fun SafetyCheckResult.commandToCode() = when(this) {
-            SUCCESS            -> 0
+
+        fun SafetyCheckResult.commandToCode() = when (this) {
+            SUCCESS -> 0
             INSULIN_DEFICIENCY -> 1
-            EXPIRED            -> 2
-            LOW_VOLTAGE        -> 3
-            PATCH_ERROR        -> 11
-            PUMP_ERROR         -> 12
-            REP_REQUEST        -> 4
-            REP_REQUEST1       -> 18
+            EXPIRED -> 2
+            LOW_VOLTAGE -> 3
+            PATCH_ERROR -> 11
+            PUMP_ERROR -> 12
+            REP_REQUEST -> 4
+            REP_REQUEST1 -> 18
             else -> -1
         }
 
-        fun Int.codeToSafetyCheckCommand() = when(this) {
+        fun Int.codeToSafetyCheckCommand() = when (this) {
             0 -> SUCCESS
             1 -> INSULIN_DEFICIENCY
             2 -> EXPIRED
@@ -68,19 +70,20 @@ enum class SetBasalProgramResult {
     FAILED;
 
     companion object {
-        fun SetBasalProgramResult.commandToCode() = when(this) {
-            SUCCESS            -> 0
+
+        fun SetBasalProgramResult.commandToCode() = when (this) {
+            SUCCESS -> 0
             INSULIN_DEFICIENCY -> 1
-            EXPIRED            -> 2
-            LOW_VOLTAGE        -> 3
-            ABNORMAL_TEMP      -> 4
-            PUMP_ERROR         -> 12
-            ABNORMAL_PROGRAM   -> 19
-            EXCEED_LIMIT       -> 20
+            EXPIRED -> 2
+            LOW_VOLTAGE -> 3
+            ABNORMAL_TEMP -> 4
+            PUMP_ERROR -> 12
+            ABNORMAL_PROGRAM -> 19
+            EXCEED_LIMIT -> 20
             else -> -1
         }
 
-        fun Int.codeToSetBasalProgramCommand() = when(this) {
+        fun Int.codeToSetBasalProgramCommand() = when (this) {
             0 -> SUCCESS
             1 -> INSULIN_DEFICIENCY
             2 -> EXPIRED
@@ -105,18 +108,19 @@ enum class SetBolusProgramResult {
     FAILED;
 
     companion object {
-        fun SetBolusProgramResult.commandToCode() = when(this) {
-            SUCCESS            -> 0
+
+        fun SetBolusProgramResult.commandToCode() = when (this) {
+            SUCCESS -> 0
             INSULIN_DEFICIENCY -> 1
-            EXPIRED            -> 2
-            LOW_VOLTAGE        -> 3
-            ABNORMAL_TEMP      -> 4
-            PUMP_ERROR         -> 12
-            EXCEED_LIMIT       -> 20
+            EXPIRED -> 2
+            LOW_VOLTAGE -> 3
+            ABNORMAL_TEMP -> 4
+            PUMP_ERROR -> 12
+            EXCEED_LIMIT -> 20
             else -> -1
         }
 
-        fun Int.codeToSetBolusProgramCommand() = when(this) {
+        fun Int.codeToSetBolusProgramCommand() = when (this) {
             0 -> SUCCESS
             1 -> INSULIN_DEFICIENCY
             2 -> EXPIRED
@@ -141,19 +145,20 @@ enum class StopPumpResult {
     ERROR;
 
     companion object {
-        fun StopPumpResult.commandToCode() = when(this) {
-            BY_REQ             -> 0
+
+        fun StopPumpResult.commandToCode() = when (this) {
+            BY_REQ -> 0
             INSULIN_DEFICIENCY -> 1
-            ABNORMAL_PUMP      -> 2
-            LOW_VOLTAGE        -> 3
-            ABNORMAL_TEMP      -> 4
-            NOT_USED           -> 5
-            PUMP_ERROR         -> 12
-            BY_LGS             -> 29
-            ERROR              -> -1
+            ABNORMAL_PUMP -> 2
+            LOW_VOLTAGE -> 3
+            ABNORMAL_TEMP -> 4
+            NOT_USED -> 5
+            PUMP_ERROR -> 12
+            BY_LGS -> 29
+            ERROR -> -1
         }
 
-        fun Int.codeToStopPumpCommand() = when(this) {
+        fun Int.codeToStopPumpCommand() = when (this) {
             0 -> BY_REQ
             1 -> INSULIN_DEFICIENCY
             2 -> ABNORMAL_PUMP
@@ -176,16 +181,17 @@ enum class InfusionModeResult {
     ERROR;
 
     companion object {
-        fun InfusionModeResult.commandToCode() = when(this) {
-            BASAL             -> 1
-            TEMP_BASAL        -> 2
-            IMME_BOLUS        -> 3
+
+        fun InfusionModeResult.commandToCode() = when (this) {
+            BASAL -> 1
+            TEMP_BASAL -> 2
+            IMME_BOLUS -> 3
             EXTEND_IMME_BOLUS -> 4
-            EXTEND_BOLUS      -> 5
-            ERROR             -> -1
+            EXTEND_BOLUS -> 5
+            ERROR -> -1
         }
 
-        fun Int.codeToInfusionModeCommand() = when(this) {
+        fun Int.codeToInfusionModeCommand() = when (this) {
             1 -> BASAL
             2 -> TEMP_BASAL
             3 -> IMME_BOLUS
@@ -204,15 +210,16 @@ enum class InfusionInfoResult {
     ERROR;
 
     companion object {
-        fun InfusionInfoResult.commandToCode() = when(this) {
-            BY_REQ        -> 0
+
+        fun InfusionInfoResult.commandToCode() = when (this) {
+            BY_REQ -> 0
             BY_REMAIN_REQ -> 1
-            BY_30MIN_RPT  -> 2
-            BY_RECONNECT  -> 3
-            ERROR         -> -1
+            BY_30MIN_RPT -> 2
+            BY_RECONNECT -> 3
+            ERROR -> -1
         }
 
-        fun Int.codeToInfusionInfoCommand() = when(this) {
+        fun Int.codeToInfusionInfoCommand() = when (this) {
             0 -> BY_REQ
             1 -> BY_REMAIN_REQ
             2 -> BY_30MIN_RPT
@@ -229,14 +236,15 @@ enum class PumpStateResult {
     ERROR;
 
     companion object {
-        fun PumpStateResult.commandToCode() = when(this) {
-            READY   -> 0
+
+        fun PumpStateResult.commandToCode() = when (this) {
+            READY -> 0
             PRIMING -> 1
             RUNNING -> 2
-            ERROR   -> 3
+            ERROR -> 3
         }
 
-        fun Int.codeToPumpStateCommand() = when(this) {
+        fun Int?.codeToPumpStateCommand() = when (this) {
             0 -> READY
             1 -> PRIMING
             2 -> RUNNING
@@ -259,21 +267,22 @@ enum class WarningMessageResult {
     ERROR;
 
     companion object {
-        fun WarningMessageResult.commandToCode() = when(this) {
+
+        fun WarningMessageResult.commandToCode() = when (this) {
             INSULIN_DEFICIENCY -> 1
-            EXPIRED            -> 2
-            LOW_VOLTAGE        -> 3
-            ABNORMAL_TEMP      -> 4
-            NOT_USED           -> 5
-            BLE_CONNECT        -> 6
-            NOT_STARTED_BASAL  -> 7
-            EXTENDED_EXPIRED   -> 10
-            PUMP_ERROR         -> 12
-            CANNULA_ERROR      -> 99
+            EXPIRED -> 2
+            LOW_VOLTAGE -> 3
+            ABNORMAL_TEMP -> 4
+            NOT_USED -> 5
+            BLE_CONNECT -> 6
+            NOT_STARTED_BASAL -> 7
+            EXTENDED_EXPIRED -> 10
+            PUMP_ERROR -> 12
+            CANNULA_ERROR -> 99
             else -> -1
         }
 
-        fun Int.codeToWarningMessageCommand() = when(this) {
+        fun Int.codeToWarningMessageCommand() = when (this) {
             1 -> INSULIN_DEFICIENCY
             2 -> EXPIRED
             3 -> LOW_VOLTAGE
@@ -302,20 +311,21 @@ enum class AlertMessageResult {
     ERROR;
 
     companion object {
-        fun AlertMessageResult.commandToCode() = when(this) {
-            INSULIN_LOW      -> 1
-            EXPIRED_ALERT    -> 2
-            BATTERY_EXCEED   -> 3
-            ABNORMAL_TEMP    -> 4
-            NOT_USED         -> 5
-            BLE_CONNECT      -> 6
-            NOT_START_BASAL  -> 7
+
+        fun AlertMessageResult.commandToCode() = when (this) {
+            INSULIN_LOW -> 1
+            EXPIRED_ALERT -> 2
+            BATTERY_EXCEED -> 3
+            ABNORMAL_TEMP -> 4
+            NOT_USED -> 5
+            BLE_CONNECT -> 6
+            NOT_START_BASAL -> 7
             PUMP_STOP_FINISH -> 8
-            EXTEND_EXPIRED   -> 10
+            EXTEND_EXPIRED -> 10
             else -> -1
         }
 
-        fun Int.codeToAlertMessageCommand() = when(this) {
+        fun Int.codeToAlertMessageCommand() = when (this) {
             1 -> INSULIN_LOW
             2 -> EXPIRED_ALERT
             3 -> BATTERY_EXCEED
@@ -339,16 +349,17 @@ enum class NoticeMessageResult {
     ERROR;
 
     companion object {
-        fun NoticeMessageResult.commandToCode() = when(this) {
-            REMAIN_EXCEED  -> 1
+
+        fun NoticeMessageResult.commandToCode() = when (this) {
+            REMAIN_EXCEED -> 1
             EXPIRED_NOTICE -> 2
-            INSPECTING     -> 3
-            SYNC_TIME      -> 26
-            GLUCOSE        -> 27
+            INSPECTING -> 3
+            SYNC_TIME -> 26
+            GLUCOSE -> 27
             else -> -1
         }
 
-        fun Int.codeToNoticeMessageCommand() = when(this) {
+        fun Int.codeToNoticeMessageCommand() = when (this) {
             1 -> REMAIN_EXCEED
             2 -> EXPIRED_NOTICE
             3 -> INSPECTING
