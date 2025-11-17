@@ -69,12 +69,14 @@ class CarelevoAlarmViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
+    private val patchAddress: String? = carelevoPatch.getPatchInfoAddress()  // 패치연결 종료시 초기화가 먼저 되고 ble를 끊기 때문에 미리 가지고 있는것
+
     private fun isPatchConnected(): Boolean {
         return carelevoPatch.isCarelevoConnected()
     }
 
     private fun getConnectedAddress(): String? {
-        return carelevoPatch.getPatchInfoAddress()
+        return patchAddress
     }
 
     fun triggerEvent(event: AlarmEvent) {

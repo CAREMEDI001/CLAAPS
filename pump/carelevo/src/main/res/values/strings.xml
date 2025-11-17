@@ -1,49 +1,33 @@
 <resources>
-    <string name="app_name">carelevo</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="carelevo">Carelevo</string>
     <string name="carelevo_shortname">CL</string>
     <string name="carelevo_description">Pump integration for carelevo</string>
 
-    <string name="common_btn_ok">확인</string>
+    <string name="common_btn_ok">OK</string>
 
-    <!--    <string name="carelevo_patch_state_key">state</string>
-        <string name="carelevo_serial_number_key">serial number</string>
-        <string name="carelevo_lot_number_key">lot number</string>
-        <string name="carelevo_boot_date_time_key">Wake up date time</string>
-        <string name="carelevo_expiration_key">Expiration time</string>
-        <string name="carelevo_infusion_status_key">status</string>
-        <string name="carelevo_basal_rate_key">basal rate</string>
-        <string name="carelevo_temp_basal_rate_key">temp basal rate</string>
-        <string name="carelevo_insulin_remain_key">insulin remaining</string>
-        <string name="carelevo_total_delivered_insulin_key">total delivered insulin</string>
-        <string name="carelevo_running_remain_time">패치 남은 시간</string>-->
+    <string name="carelevo_patch_state_key">Connection</string>
+    <string name="carelevo_serial_number_key">Serial No.</string>
+    <string name="carelevo_firmware_version_key">Firmware</string>
+    <string name="carelevo_lot_number_key">Lot No.</string>
+    <string name="carelevo_boot_date_time_key">Activation Time</string>
+    <string name="carelevo_expiration_key">Expiration</string>
+    <string name="carelevo_infusion_status_key">Infusion</string>
+    <string name="carelevo_basal_rate_key">Basal Rate</string>
+    <string name="carelevo_temp_basal_rate_key">Temp Basal</string>
+    <string name="carelevo_insulin_remain_key">Insulin Remaining</string>
+    <string name="carelevo_total_delivered_basal_key">Basal Delivered</string>
+    <string name="carelevo_total_delivered_bolus_key">Bolus Delivered</string>
+    <string name="carelevo_running_remain_time">Patch Time Remaining</string>
+    <string name="carelevo_bolus_status_key">Bolus</string>
+    <string name="carelevo_imme_bolus_rate_key">Immediate Bolus</string>
+    <string name="carelevo_extend_bolus_rate_key">Extended Bolus</string>
+    <string name="carelevo_bolus_time_range">Delivery Duration</string>
 
-    <string name="carelevo_patch_state_key">연결 상태</string>
-    <string name="carelevo_serial_number_key">시리얼 번호</string>
-    <string name="carelevo_firmware_version_key">펌웨어 버전</string>
-    <string name="carelevo_lot_number_key">로트 번호</string>
-    <string name="carelevo_boot_date_time_key">기기 시작 시간</string>
-    <string name="carelevo_expiration_key">만료 시간</string>
-    <string name="carelevo_infusion_status_key">기저 주입 상태</string>
-    <string name="carelevo_basal_rate_key">기저 속도</string>
-    <string name="carelevo_temp_basal_rate_key">임시 기저 속도</string>
-    <string name="carelevo_insulin_remain_key">남은 인슐린</string>
-    <string name="carelevo_total_delivered_basal_key">총 주입 기저</string>
-    <string name="carelevo_total_delivered_bolus_key">총 주입 볼러스</string>
-    <string name="carelevo_running_remain_time">패치 남은 시간</string>
-    <string name="carelevo_bolus_status_key">볼러스 상태</string>
-    <string name="carelevo_imme_bolus_rate_key">즉시 볼러스 주입량</string>
-    <string name="carelevo_extend_bolus_rate_key">연장 볼러스 주입량</string>
-    <string name="carelevo_bolus_time_range">볼러스 주입 기간</string>
-
-    <string name="common_label_unit_value_duration_hour_and_minute">%d시간 %d분</string>
-    <string name="common_label_unit_value_date_format_year_month_date_day">yyyy.MM.dd (E)</string>
-    <string name="common_label_unit_value_duration_day_hour">%d일 %d시간</string>
-    <string name="common_label_unit_value_minute">%d분</string>
-    <string name="common_label_unit_value_duration_hour">%d시간</string>
+    <string name="common_label_unit_value_duration_hour_and_minute">%d hrs %d min</string>
+    <string name="common_label_unit_value_date_format_year_month_date_day">(E), MMMM dd, yyyy</string>
+    <string name="common_label_unit_value_duration_day_hour">%d days %d hrs</string>
+    <string name="common_label_unit_value_minute">%d min</string>
+    <string name="common_label_unit_value_duration_hour">%d hrs</string>
     <string name="common_label_unit_dose">U</string>
     <string name="common_label_unit_value_dose">%sU</string>
     <string name="common_label_unit_value_dose_with_space">%s U</string>
@@ -52,242 +36,259 @@
     <string name="common_label_unit_value_dose_per_speed_with_space">%s U/hr</string>
 
 
-    <string name="common_unit_day_hour_value">%d일 %d시간</string>
-    <string name="common_unit_hour_value">%d시간</string>
-    <string name="common_unit_sec_value">%d초</string>
     <string name="common_unit_step_format">%1$d/%2$d</string>
-    <string name="common_unit_value_day_hour_min">%1$d일 %2$02d:%3$02d</string>
-    <string name="common_unit_remain_min_sec">%d분 %02d초 남음</string>
+    <string name="common_unit_value_day_hour_min">%1$d days %2$02d:%3$02d</string>
+    <string name="common_unit_remain_min_sec">%d min %02d sec remaining</string>
 
+    <string name="carelevo_btn_patch_expiration">Deactivate Patch</string>
+    <string name="carelevo_btn_input_insulin_amount">Fill Amount</string>
+    <string name="carelevo_btn_input_search_patch">Search Patch</string>
+    <string name="carelevo_btn_retry">try again.</string>
+    <string name="carelevo_btn_next">Next</string>
+    <string name="carelevo_btn_safety_check">Safety Check</string>
+    <string name="carelevo_btn_ready_complete">Ready</string>
+    <string name="carelevo_btn_close">Close</string>
+    <string name="carelevo_btn_cancel">Cancel</string>
+    <string name="carelevo_btn_confirm">Confirm</string>
+    <string name="carelevo_btn_research">Rescan</string>
+    <string name="carelevo_btn_needle_insert_check">Check Insertion</string>
 
-    <string name="carelevo_state_none_value">No Connection</string>
+    <string name="carelevo_state_none_value">No Active Patch</string>
     <string name="carelevo_state_disconnected_value">Disconnected</string>
     <string name="carelevo_state_connected_value">Connected</string>
 
-    <string name="carelevo_overview_connect_btn_label">CONNECT</string>
-    <string name="carelevo_overview_communication_btn_label">COMMUNICATION CHECK</string>
-    <string name="carelevo_overview_pump_stop_btn_label">PUMP STOP</string>
-    <string name="carelevo_overview_pump_resume_btn_label">PUMP RESUME</string>
-    <string name="carelevo_overview_pump_discard_btn_label">DISCARD</string>
+    <string name="carelevo_overview_connect_btn_label">Connect Patch</string>
+    <string name="carelevo_overview_communication_btn_label">Communication Error</string>
+    <string name="carelevo_overview_pump_stop_btn_label">Pause Insulin</string>
+    <string name="carelevo_overview_pump_resume_btn_label">Start Insulin</string>
+    <string name="carelevo_overview_pump_discard_btn_label">Patch Expired</string>
 
     <string name="carelevo_overview_infusion_state_basal">Basal</string>
     <string name="carelevo_overview_infusion_state_temp_basal">Temp Basal</string>
-    <string name="carelevo_overview_infusion_state_imme_bolus">Imme Bolus</string>
-    <string name="carelevo_overview_infusion_state_extend_bolus">Extend Bolus</string>
-    <string name="carelevo_overview_infusion_state_pump_stop">Pump Stop</string>
+    <string name="carelevo_overview_infusion_state_imme_bolus">Bolus</string>
+    <string name="carelevo_overview_infusion_state_extend_bolus">Extended Bolus</string>
+    <string name="carelevo_overview_infusion_state_pump_stop">Pause Insulin</string>
 
-    <string name="carelevo_connect_prepare_title">패치 시작</string>
-    <string name="carelevo_connect_patch_title">패치 검색 및 연결</string>
-    <string name="carelevo_connect_safety_check_title">안전 점검</string>
-    <string name="carelevo_connect_patch_attach_title">패치 부착</string>
-    <string name="carelevo_connect_cannula_check_title">바늘 삽입</string>
+    <string name="carelevo_dialog_insulin_input_title">Enter insulin amount.</string>
+    <string name="carelevo_dialog_insulin_input_hint">Insulin amount</string>
+
+    <string name="carelevo_connect_prepare_title">Patch Started</string>
+    <string name="carelevo_connect_patch_title">Connect Patch</string>
+    <string name="carelevo_connect_safety_check_title">Safety Check</string>
+    <string name="carelevo_connect_patch_attach_title">Apply Patch</string>
+    <string name="carelevo_connect_cannula_check_title">Insert Needle</string>
 
     <string name="key_carelevo_low_reservoir_reminders" translatable="false">carelevo_low_reservoir_reminders</string>
-    <string name="carelevo_low_reservoir_reminders_title">인슐린 부족 알람</string>
-    <string name="carelevo_patch_buzzer_alarm_title">패치 부저 알람</string>
-    <string name="carelevo_patch_expiration_reminders_title">패치 사용 기간 알림 설정</string>
-    <string name="carelevo_low_reservoir_reminders_title_value">인슐린 부족 알람 설정 값</string>
-    <string name="carelevo_patch_expiration_reminders_title_value">패치 사용 기간 알림 설정 값</string>
-    <string name="carelevo_patch_expiration_reminders_message">패치를 사용한 기간이 설정한 시간 이상이 되면 알림이 발생합니다.</string>
+    <string name="carelevo_low_reservoir_reminders_title">Low Insulin Notification</string>
+    <string name="carelevo_patch_buzzer_alarm_title">Patch Info Alarm</string>
+    <string name="carelevo_patch_expiration_reminders_title">Patch Usage Reminder</string>
+    <string name="carelevo_low_reservoir_reminders_title_value">Low Insulin Notification Setting</string>
+    <string name="carelevo_patch_expiration_reminders_title_value">Patch Usage Notification Setting</string>
+    <string name="carelevo_patch_expiration_reminders_message">A reminder sounds when patch usage time exceeds the set time.</string>
 
-    <string name="carelevo_preferences_category_other">기타</string>
-    <string name="carelevo_preferences_category_alerts">경고</string>
-    <string name="carelevo_preferences_category_confirmation_beeps">확인 신호음</string>
-    <string name="carelevo_preferences_category_notifications">알림</string>
+    <string name="carelevo_preferences_category_confirmation_beeps">Confirmation Beeps</string>
+    <string name="carelevo_preferences_category_notifications">Notifications</string>
 
-    <string name="carelevo_title_fill_insulin">패치에 인슐린 채우기</string>
-    <string name="carelevo_notice_fill_insulin_amount">사용 기간 (최대 168시간)을 고려하여 패치에 인슐린을 채워주세요.\n(50 U - 300 U)인슐린 양 입력 버튼을 눌러 채운 인슐린 양을 입력해 주세요.</string>
-
-    <string name="carelevo_btn_patch_expiration">사용 종료</string>
-    <string name="carelevo_btn_input_insulin_amount">인슐린 양 입력</string>
-    <string name="carelevo_btn_input_search_patch">패치 검색</string>
-    <string name="carelevo_btn_retry">재시도</string>
-    <string name="carelevo_btn_next">다음</string>
-    <string name="carelevo_btn_safety_check">안전점검</string>
-    <string name="carelevo_btn_ready_complete">준비완료</string>
-    <string name="carelevo_btn_close">닫기</string>
-    <string name="carelevo_btn_cancel">취소</string>
-    <string name="carelevo_btn_confirm">확인</string>
-    <string name="carelevo_btn_research">재검색</string>
-    <string name="carelevo_btn_needle_insert_check">바늘 삽입 점검</string>
+    <string name="carelevo_title_fill_insulin">Fill Patch with Insulin</string>
+    <string name="carelevo_notice_fill_insulin_amount">Fill the patch with insulin (50–300 U), considering the usage period (up to 168 hours). Tap the [Fill Amount] for insulin filled.</string>
 
     <string name="carelevo_patch_step_1">STEP 1.</string>
     <string name="carelevo_patch_step_2">STEP 2.</string>
     <string name="carelevo_patch_step_3">STEP 3.</string>
 
-    <string name="carelevo_patch_connect_step_1_title">바늘 보호캡 제거하기</string>
-    <string name="carelevo_patch_connect_step_1_desc">패치를 포장재에서 꺼낸 후 바늘 보호캡을 제거해 주세요.</string>
-    <string name="carelevo_patch_connect_step_2_title">전원 켜기 및 연결</string>
-    <string name="carelevo_patch_connect_step_2_desc">전원 버튼을 1초 이상 길게 눌러 부팅음이 확인 되면 아래 패치 검색 버튼을 눌러주세요.</string>
+    <string name="carelevo_patch_connect_step_1_title">Remove Needle Cap</string>
+    <string name="carelevo_patch_connect_step_1_desc">Take out patch from blister and remove needle cap.</string>
+    <string name="carelevo_patch_connect_step_2_title">Power On and Connect</string>
+    <string name="carelevo_patch_connect_step_2_desc">Press the power button for more than 1 second. After the beep, Tap the [Search Patch] button below.</string>
 
-    <string name="carelevo_patch_safety_check_start_title">안전점검 시작</string>
-    <string name="carelevo_patch_safety_check_end_title">안전점검 완료</string>
-    <string name="carelevo_patch_safety_check_start_desc">정상적으로 연결되었으니 [안전점검]버튼을 눌러주세요.</string>
-    <string name="carelevo_patch_safety_check_end_desc">안전점검을 완료했습니다. 다음 버튼을 눌러주세요.</string>
-    <string name="carelevo_patch_safety_check_desc_warning">안전점검 후 인슐린 방울이 맺혔는지 확인해 주세요.</string>
-    <string name="carelevo_patch_safety_check_retry_desc">인슐린 방울이 맺히지 않았나요?</string>
+    <string name="carelevo_patch_safety_check_start_title">Start Safety Check</string>
+    <string name="carelevo_patch_safety_check_end_title">Safety Check Completed</string>
+    <string name="carelevo_patch_safety_check_start_desc">Connection successful. Tap the [Safety Check] button.</string>
+    <string name="carelevo_patch_safety_check_end_desc">Safety check completed. Tap the [Next] button.</string>
+    <string name="carelevo_patch_safety_check_desc_warning">Check for insulin drop at the tip of the needle during safety check.</string>
+    <string name="carelevo_patch_safety_check_retry_desc">Didn\'t see insulin drops?</string>
 
-    <string name="carelevo_patch_attach_step1_title">부착 부위 소독</string>
-    <string name="carelevo_patch_attach_step1_desc">알콜솜으로 깨끗이 소독해 주세요.</string>
-    <string name="carelevo_patch_attach_step2_title">패치 보호 테이프 제거</string>
-    <string name="carelevo_patch_attach_step2_desc">패치를 포장재에서 꺼낸 후 보호 테이프를 제거해 주세요.</string>
-    <string name="carelevo_patch_attach_step3_title">패치 부착</string>
-    <string name="carelevo_patch_attach_step3_desc">패치를 피부에 부착해 주세요.\n잘 부착되었는지 확인 후 [준비완료] 버튼을 눌러주세요.</string>
+    <string name="carelevo_patch_attach_step1_title">Disinfect Patch Site</string>
+    <string name="carelevo_patch_attach_step1_desc">Clean thoroughly with an alcohol swab.</string>
+    <string name="carelevo_patch_attach_step2_title">Remove Backing Tape</string>
+    <string name="carelevo_patch_attach_step2_desc">Take out patch from blister and remove needle cap.</string>
+    <string name="carelevo_patch_attach_step3_title">Apply Patch</string>
+    <string name="carelevo_patch_attach_step3_desc">Apply the patch to the skin. Tap the [Ready] button.</string>
 
-    <string name="carelevo_patch_needle_insertion_step1_title">어플리케이터의 안전캡 제거</string>
-    <string name="carelevo_patch_needle_insertion_step1_desc">안전캡을 화살표 방향으로 90도 돌린 후 안전캡을 들어 제거해 주세요.</string>
-    <string name="carelevo_patch_needle_insertion_step2_title">바늘 삽입</string>
-    <string name="carelevo_patch_needle_insertion_step2_desc">어플리케이터의 푸시 버튼을 끝까지 눌러 바늘을 삽입해 주세요. 정상적으로 바늘이 삽입되면 부저음이 1회 발생합니다.</string>
-    <string name="carelevo_patch_needle_insertion_desc_warning">누르고 10초 유지하세요.</string>
+    <string name="carelevo_patch_needle_insertion_step1_title">Remove Safety Cap</string>
+    <string name="carelevo_patch_needle_insertion_step1_desc">Turn the safety cap in the direction of the arrow and remove.</string>
+    <string name="carelevo_patch_needle_insertion_step2_title">Insert Needle</string>
+    <string name="carelevo_patch_needle_insertion_step2_desc">Press the applicator push button all the way down. A beep will sound upon successful insertion.</string>
+    <string name="carelevo_patch_needle_insertion_desc_warning">Press and hold for 10 seconds.</string>
 
-    <string name="carelevo_dialog_patch_needle_check_title">바늘 삽입이 되지 않았나요?</string>
-    <string name="carelevo_dialog_patch_needle_check_desc">어플리케이터 가운데 부분을 끝까지 눌러 바늘을 삽입해 주세요. 정상적으로 바늘이 삽입되면 부저음이 1회 발생합니다.\n아래 [바늘 삽입 점검] 버튼을 눌러주세요.</string>
-    <string name="carelevo_dialog_patch_needle_check_desc_warning">누르고 10초 유지하세요.</string>
-    <string name="carelevo_dialog_patch_discard_message_title">새 패치 사용을 위해 기존 패치를 사용 종료하시겠어요?</string>
-    <string name="carelevo_dialog_patch_discard_message_desc">확인 버튼을 누르면 인슐린 주입이 중단됩니다.</string>
-    <string name="carelevo_dialog_patch_connect_message_title">연결하려는 패치 주소가 맞다면 확인 버튼, 아니라면 재검색 버튼을 클릭해 주세요.</string>
+    <string name="carelevo_dialog_patch_needle_check_title">Needle not inserted?</string>
+    <string name="carelevo_dialog_patch_needle_check_desc">Press the applicator push button all the way down.\nYou will hear a beep sound upon successful insertion.\nTap the <b>[Check Insertion]</b> button below.</string>
+    <string name="carelevo_dialog_patch_discard_message_title">Deactivate patch and start new patch?</string>
+    <string name="carelevo_dialog_patch_discard_message_desc">Pressing the [OK] button will stop insulin.</string>
+    <string name="carelevo_dialog_patch_connect_message_title">If the patch address is correct, tap Confirm. If not, tap Rescan.</string>
 
-    <string name="carelevo_toast_patch_connecting">패치가 연결 중입니다.</string>
-    <string name="carelevo_toast_msg_bluetooth_not_enabled">블루투스 연결 상태를 확인해 주세요.</string>
-    <string name="carelevo_toast_msg_patch_not_connected">연결된 패치가 없습니다.</string>
-    <string name="carelevo_toast_msg_profile_not_set">프로파일이 설정되어 있지 않습니다.</string>
-    <string name="carelevo_toast_msg_cannula_inserted">바늘 삽입이 완료 되었습니다.</string>
-    <string name="carelevo_toast_msg_cannula_not_inserted">바늘 삽입이 완료 되지 않았습니다.</string>
-    <string name="carelevo_toast_msg_cannula_check_failed">바늘 삽입 점검 실패했습니다.</string>
-    <string name="carelevo_toast_msg_discard_complete">사용종료 되었습니다.</string>
-    <string name="carelevo_toast_msg_discard_failed">사용종료 실패 했습니다. 다시 시도해 주세요.</string>
-    <string name="carelevo_toast_msg_set_basal_complete">패치 연결이 완료되었습니다.</string>
-    <string name="carelevo_toast_msg_set_basal_failed">기저 주입 요청 실패했습니다. 다시 시도해 주세요.</string>
-    <string name="carelevo_toast_mag_set_basal_resume_success">주입 재개 성공했습니다.</string>
-    <string name="carelevo_toast_mag_set_basal_resume_fail">주입 재개 실패 했습니다. 다시 시도해 주세요.</string>
-    <string name="carelevo_toast_mag_set_basal_suspend_success">"주입 정지 성공했습니다."</string>
-    <string name="carelevo_toast_mag_set_basal_suspend_fail">주입 정지 실패했습니다. 다시 시도해 주세요.</string>
-    <string name="carelevo_toast_msg_not_connected">연결된 패치가 없습니다.</string>
-    <string name="carelevo_toast_msg_safety_check_success">안전점검에 성공했습니다.</string>
-    <string name="carelevo_toast_msg_safety_check_failed">안전점검에 실패했습니다.</string>
+    <!-- Connection -->
+    <string name="carelevo_toast_patch_connecting">Patch is connecting…</string>
+    <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth is not enabled. Please check.</string>
+    <string name="carelevo_toast_msg_patch_not_connected">No patch connected.</string>
+    <string name="carelevo_toast_msg_not_connected">No patch connected.</string>
+
+    <!-- Profile -->
+    <string name="carelevo_toast_msg_profile_not_set">Profile is not set.</string>
+
+    <!-- Cannula Insertion -->
+    <string name="carelevo_toast_msg_cannula_inserted">Cannula insertion completed.</string>
+    <string name="carelevo_toast_msg_cannula_not_inserted">Cannula insertion not completed.</string>
+    <string name="carelevo_toast_msg_cannula_check_failed">Cannula check failed.</string>
+
+    <!-- Patch Discard -->
+    <string name="carelevo_toast_msg_discard_complete">Patch use completed.</string>
+    <string name="carelevo_toast_msg_discard_failed">Patch discard failed. Please try again.</string>
+
+    <!-- Basal Delivery -->
+    <string name="carelevo_toast_msg_set_basal_complete">Patch connection completed.</string>
+    <string name="carelevo_toast_msg_set_basal_failed">Basal delivery request failed. Please try again.</string>
+
+    <!-- Delivery Resume/Suspend -->
+    <string name="carelevo_toast_mag_set_basal_resume_success">Delivery resumed successfully.</string>
+    <string name="carelevo_toast_mag_set_basal_resume_fail">Failed to resume delivery. Please try again.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_success">Delivery suspended successfully.</string>
+    <string name="carelevo_toast_mag_set_basal_suspend_fail">Failed to suspend delivery. Please try again.</string>
+
+    <!-- Safety Check -->
+    <string name="carelevo_toast_msg_safety_check_success">Safety check completed successfully.</string>
+    <string name="carelevo_toast_msg_safety_check_failed">Safety check failed.</string>
 
 
-    <string name="alarm_feat_label_warning">경고</string>
-    <string name="alarm_feat_label_alert">주의</string>
-    <string name="alarm_feat_label_notice">알림</string>
-    <string name="alarm_feat_label_unknown">알 수 없음</string>
+    <string name="alarm_feat_label_warning">Critical</string>
+    <string name="alarm_feat_label_alert">Advisory</string>
+    <string name="alarm_feat_label_notice">Notification</string>
+    <string name="alarm_feat_label_unknown">Unknown</string>
 
-    <string name="alarm_feat_label_occurrence_time">발생 시간</string>
-    <string name="alarm_feat_format_occurrence_time">yyyy. MM. dd(E) HH:mm</string>
+    <string name="alarm_feat_label_occurrence_time">Alarm Time</string>
+    <string name="alarm_feat_format_occurrence_time">YYYY-MM-dd (E) HH:mm</string>
 
-    <string name="alarm_feat_desc_helper">패치에 문제가 발생하셨나요?\n아래 버튼을 눌러 패치를 강제 종료해 주세요.</string>
+    <string name="alarm_feat_desc_helper">Unable to connect to patch\nTap the confirm button below to discard the patch.</string>
 
-    <string name="alarm_feat_title_warning_low_insulin">인슐린 부족</string>
-    <string name="alarm_feat_title_warning_expired_patch">패치 사용 종료</string>
-    <string name="alarm_feat_title_warning_low_battery">배터리 부족</string>
-    <string name="alarm_feat_title_warning_invalid_temperature">부적합 온도</string>
-    <string name="alarm_feat_title_warning_not_used_app">앱 미사용 주입 차단</string>
-    <string name="alarm_feat_title_warning_not_connected_ble">BLE 연결 안됨</string>
-    <string name="alarm_feat_title_warning_incomplete_patch_setting">패치 적용 시간 종료</string>
-    <string name="alarm_feat_title_warning_failed_safety_check">안전점검 실패</string>
-    <string name="alarm_feat_title_warning_patch_error">패치 오류</string>
-    <string name="alarm_feat_title_warning_infusion_clogged">주입구 막힘</string>
-    <string name="alarm_feat_title_warning_needle_injection_error">바늘 삽입 오류</string>
+    <!-- Warning Titles -->
+    <string name="alarm_feat_title_warning_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_warning_expired_patch">Patch Expired</string>
+    <string name="alarm_feat_title_warning_low_battery">Low Battery</string>
+    <string name="alarm_feat_title_warning_invalid_temperature">High/Low Temperature</string>
+    <string name="alarm_feat_title_warning_not_used_app">Auto-Off</string>
+    <string name="alarm_feat_title_warning_not_connected_ble">BLE Not Connected</string>
+    <string name="alarm_feat_title_warning_incomplete_patch_setting">Patch Application Timeout</string>
+    <string name="alarm_feat_title_warning_failed_safety_check">Self-Diagnosis Failed</string>
+    <string name="alarm_feat_title_warning_patch_error">Patch Error</string>
+    <string name="alarm_feat_title_warning_infusion_clogged">Occlusion</string>
+    <string name="alarm_feat_title_warning_needle_injection_error">Needle Insertion Error</string>
 
-    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[패치에 인슐린이 <b>10 U 미만</b>으로, 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[패치 사용 및 인슐린 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[패치 배터리가 부족하여 인슐린 주입이 중단되었습니다<br><b>강제 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[인슐린 주입이 중단되었습니다.<br><b>즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[인슐린 주입이 중단되었습니다.<br><b>주입 재개 버튼을 눌러 기저 주입을 다시 시작해 보세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[패치 적용 시간이 만료되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[안전점검이 실패했습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[예상치 못한 오류로 인해 인슐린 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[주입구가 막혀 인슐린 주입이 중단되었습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[바늘 삽입에 실패했습니다.<br><b>사용 종료를 눌러 즉시 패치를 교체해 주세요.</b>]]></string>
+    <!-- Warning Descriptions -->
+    <string name="alarm_feat_desc_warning_low_insulin"><![CDATA[Less than <b>10 U</b> insulin remaining; insulin delivery stopped.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_expired_patch"><![CDATA[Patch expired; insulin delivery stopped.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_low_battery"><![CDATA[Low battery; insulin delivery stopped.<br><b>Tap the [Discard Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_invalid_temperature"><![CDATA[Insulin delivery stopped.<br><b>Move to a suitable temperature now (40℉ ~ 99℉).</b>]]></string>
+    <string name="alarm_feat_desc_warning_not_used_app"><![CDATA[Insulin delivery stopped.<br><b>Tap the [Start Insulin] button and restart basal delivery.</b>]]></string>
+    <string name="alarm_feat_desc_warning_incomplete_patch_setting"><![CDATA[Patch application time ran out.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_failed_safety_check"><![CDATA[Self-diagnosis failed.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_patch_error"><![CDATA[Insulin delivery stopped due to unexpected error.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_infusion_clogged"><![CDATA[Insulin delivery stopped due to occlusion.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_warning_needle_injection_error"><![CDATA[Failed to insert the needle.<br><b>Tap the [Deactivate Patch] button and change patch now.</b>]]></string>
 
-    <string name="alarm_feat_title_alert_low_insulin">인슐린 부족</string>
-    <string name="alarm_feat_title_alert_expired_patch_first">패치 사용 기간 만료</string>
-    <string name="alarm_feat_title_alert_expired_patch_second">패치 사용 종료 임박</string>
-    <string name="alarm_feat_title_alert_low_battery">배터리 부족</string>
-    <string name="alarm_feat_title_alert_invalid_temperature">부적합 온도</string>
-    <string name="alarm_feat_title_alert_not_used_app">앱 미사용 주입 차단</string>
-    <string name="alarm_feat_title_alert_not_connected_ble">BLE 연결 안됨</string>
-    <string name="alarm_feat_title_alert_incomplete_patch_setting">패치 적용 미완료</string>
-    <string name="alarm_feat_title_alert_resume_infusion">주입 재개</string>
-    <string name="alarm_feat_title_alert_off_bluetooth">블루투스 켜기</string>
+    <!-- Alert Titles -->
+    <string name="alarm_feat_title_alert_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_alert_expired_patch_first">Patch Operating Life Expired</string>
+    <string name="alarm_feat_title_alert_expired_patch_second">Patch Will Expire Soon</string>
+    <string name="alarm_feat_title_alert_low_battery">Low Battery</string>
+    <string name="alarm_feat_title_alert_invalid_temperature">High/Low Temperature</string>
+    <string name="alarm_feat_title_alert_not_used_app">Auto-Off</string>
+    <string name="alarm_feat_title_alert_not_connected_ble">BLE Not Connected</string>
+    <string name="alarm_feat_title_alert_incomplete_patch_setting">Patch Activation Incomplete</string>
+    <string name="alarm_feat_title_alert_resume_infusion">Start Insulin</string>
+    <string name="alarm_feat_title_alert_off_bluetooth">Turn Bluetooth On</string>
 
-    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[패치에 남은 인슐린이 <b>%s U</b> 미만입니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_first"><![CDATA[패치 사용 기간이 만료되었습니다.<br><b>새 패치로 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_alert_expired_patch_second"><![CDATA[패치 사용이 곧 종료됩니다.<br><b>새 패치로 교체해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[패치에 배터리가 부족합니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[인슐린 주입이 중단되었습니다.<br><b>즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</b><br>적합한 온도가 되면 기저 주입이 재개됩니다.]]></string>
-    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[확인 버튼을 눌러주세요.<br>확인 버튼을 누르지 않으면 경고 알람으로 상향되고<br><b>인슐린 주입이 차단됩니다.</b>]]></string>
-    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[확인 버튼을 눌러 패치 연결을 완료해 주세요.]]></string>
-    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[주입 정지가 종료되었습니다.<br><b>주입 재개를 눌러 기저 주입을 다시 시작해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[패치 사용을 위해 블루투스가 필요합니다.<br><b>확인 버튼을 누르고 블루투스를 켜 주세요.</b>]]></string>
+    <!-- Alert Descriptions -->
+    <string name="alarm_feat_desc_alert_low_insulin"><![CDATA[Less than <b>%s U</b> insulin remaining.<br><b>Prepare to change the patch.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_first"><![CDATA[Patch expired.<br><b>Change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_alert_expired_patch_second"><![CDATA[Patch will expire soon.<br><b>Change patch now.</b>]]></string>
+    <string name="alarm_feat_desc_alert_low_battery"><![CDATA[Battery is low.<br><b>Prepare to change the patch.</b>]]></string>
+    <string name="alarm_feat_desc_alert_invalid_temperature"><![CDATA[Insulin delivery paused due to extreme temperature.</b><br>Move to 40℉–99℉ to resume.]]></string>
+    <string name="alarm_feat_desc_alert_not_used_app"><![CDATA[Please tap [OK].<br>If ignored, it escalates to a critical alarm and <b>insulin delivery will be stopped.</b>]]></string>
+    <string name="alarm_feat_desc_alert_incomplete_patch_setting"><![CDATA[Tap the [OK] button to complete the patch activation.]]></string>
+    <string name="alarm_feat_desc_alert_resume_infusion"><![CDATA[Pause Insulin has ended.<br><b>Tap [Start Insulin] to start.</b>]]></string>
+    <string name="alarm_feat_desc_alert_off_bluetooth"><![CDATA[Bluetooth is required to use the patch.<br><b>Tap [OK] and turn Bluetooth on.</b>]]></string>
 
-    <string name="alarm_feat_title_notice_low_insulin">인슐린 부족</string>
-    <string name="alarm_feat_title_notice_expired_patch">패치 사용 기간 알림</string>
-    <string name="alarm_feat_title_notice_check_patch">패치 점검 알림</string>
-    <string name="alarm_feat_title_notice_change_time_zone">국가 표준시간 변경</string>
-    <string name="alarm_feat_title_notice_check_bg">혈당 확인</string>
-    <string name="alarm_feat_title_notice_lgs_started">LGS 작동 시작</string>
-    <string name="alarm_feat_title_notice_lgs_ended">LGS 작동 종료</string>
-    <string name="alarm_feat_title_notice_lgs_error">LGS 작동 불가</string>
-    <string name="alarm_feat_title_notice_unknown">패치 오류</string>
+    <!-- Notice Titles -->
+    <string name="alarm_feat_title_notice_low_insulin">Low Insulin</string>
+    <string name="alarm_feat_title_notice_expired_patch">Patch Usage Time Notification</string>
+    <string name="alarm_feat_title_notice_check_patch">Patch Check Notification</string>
+    <string name="alarm_feat_title_notice_change_time_zone">Time Zone Change</string>
+    <string name="alarm_feat_title_notice_check_bg">Check Blood Glucose</string>
+    <string name="alarm_feat_title_notice_lgs_started">LGS Started</string>
+    <string name="alarm_feat_title_notice_lgs_ended">LGS Ended</string>
+    <string name="alarm_feat_title_notice_lgs_error">LGS Not Available</string>
+    <string name="alarm_feat_title_notice_unknown">Patch Error</string>
 
-    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[패치에 남은 인슐린이 %s U 미만입니다.<br><b>패치 교체를 준비해 주세요.</b>]]></string>
-    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[패치 사용 기간이 <b>%s일 %s시간</b>이 되었습니다.<br>패치 사용에 참고해 주세요.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[<b>%s(UTC %s)에서 %s(UTC %s)</b>(으)로 국가 표준시간이 변경되었습니다.]]></string>
-    <string name="alarm_feat_desc_notice_change_time_zone_same_country"><![CDATA[<b>%s/%s(UTC %s)에서 %s/%s(UTC %s)</b>(으)로 국가 표준시간이 변경되었습니다.]]></string>
-    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[볼러스 주입 후 <b>%s</b>이 지났습니다.<br>혈당을 확인해 주세요.]]></string>
-    <string name="alarm_feat_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS 일시 정지로 인하여 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_time_over">설정한 LGS 작동 시간대가 경과되어 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS 사용 설정을 OFF로 변경하여 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">CGM 혈당 값이 설정 값 이상으로 측정되어 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_ended_unknown">알수 없는 이유로 인해 LGS 작동 종료 되었습니다.</string>
-    <string name="alarm_feat_desc_notice_lgs_error">패치 및 CGM 연결 상태를 확인해 주세요.</string>
+    <!-- Notice Descriptions -->
+    <string name="alarm_feat_desc_notice_low_insulin"><![CDATA[Less than %s U insulin remaining.<br><b>Prepare to change the patch.</b>]]></string>
+    <string name="alarm_feat_desc_notice_expired_patch"><![CDATA[Patch usage time is <b>%s days %s hours.</b>.<br>Keep in mind during use.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone"><![CDATA[Time zone has changed from <b>%s(UTC %s) to %s(UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_change_time_zone_same_country"><![CDATA[Time zone has changed from <b>%s/%s(UTC %s) to %s/%s(UTC %s)</b>.]]></string>
+    <string name="alarm_feat_desc_notice_check_bg"><![CDATA[%s have passed since your bolus.<br>Please check your blood glucose.]]></string>
+    <string name="alarm_feat_desc_notice_lgs_started">LGS started.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_pause_lgs">LGS ended due to LGS pause.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_time_over">LGS ended because scheduled time has elapsed.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_off_lgs">LGS ended because LGS was turned off.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_high_bg">LGS ended because CGM level exceeded the set threshold.</string>
+    <string name="alarm_feat_desc_notice_lgs_ended_unknown">LGS ended due to an unknown reason.</string>
+    <string name="alarm_feat_desc_notice_lgs_error">Please check patch and CGM connection.</string>
 
-    <string name="alarm_feat_desc_unknown">알 수 없는 패치 오류입니다.</string>
+    <string name="alarm_feat_desc_unknown">Unexpected patch error.</string>
 
-    <string name="alarm_feat_btn_patch_discard">사용 종료</string>
-    <string name="alarm_feat_btn_patch_force_discard">강제 종료</string>
-    <string name="alarm_feat_btn_resume_infusion">주입 재개</string>
+    <!-- Action Buttons -->
+    <string name="alarm_feat_btn_patch_discard">Deactivate Patch</string>
+    <string name="alarm_feat_btn_patch_force_discard">Discard Patch</string>
+    <string name="alarm_feat_btn_resume_infusion">Start Insulin</string>
 
-    <string name="alarm_feat_msg_check_patch_connect">패치 연결 상태를 확인해 주세요.</string>
-    <string name="alarm_feat_msg_fail_alarm_clear">알림 확인 처리에 실패했습니다. 다시 시도 해주세요.</string>
+    <!-- General Messages -->
+    <string name="alarm_feat_msg_check_patch_connect">Please check patch connection.</string>
+    <string name="alarm_feat_msg_fail_alarm_clear">Failed to confirm alarm/notification. Please try again.</string>
 
-    <!--    notification desc -->
-    <string name="alarm_notification_desc_warning_low_insulin">패치에 인슐린이 10 U 미만 으로, 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_expired_patch">패치 사용 및 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_low_battery">패치 배터리가 부족하여 인슐린 주입이 중단되었습니다. 강제 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_invalid_temperature">인슐린 주입이 중단되었습니다. 즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요.</string>
-    <string name="alarm_notification_desc_warning_not_used_app">인슐린 주입이 중단되었습니다. 주입 재개 버튼을 눌러 기저 주입을 다시 시작해 보세요.</string>
-    <string name="alarm_notification_desc_warning_incomplete_patch_setting">패치 적용 시간이 만료되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_failed_safety_check">안전점검이 실패했습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_patch_error">예상치 못한 오류로 인해 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_infusion_clogged">주입구가 막혀 인슐린 주입이 중단되었습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
-    <string name="alarm_notification_desc_warning_needle_injection_error">바늘 삽입에 실패했습니다. 사용 종료를 눌러 즉시 패치를 교체해 주세요.</string>
+    <!--    notification -->
+    <string name="alarm_notification_desc_warning_low_insulin">Less than 10 U insulin remaining; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_expired_patch">Patch expired; insulin delivery stopped. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_low_battery">Low battery; insulin delivery stopped. Tap the [Discard Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_invalid_temperature">Insulin delivery stopped. Move to a suitable temperature now (40℉ ~ 99℉).</string>
+    <string name="alarm_notification_desc_warning_not_used_app">Insulin delivery stopped. Tap the [Start Insulin] button and restart basal delivery.</string>
+    <string name="alarm_notification_desc_warning_incomplete_patch_setting">Patch application time ran out. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_failed_safety_check">Self-diagnosis failed. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_patch_error">Insulin delivery stopped due to unexpected error. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_infusion_clogged">Insulin delivery stopped due to occlusion. Tap the [Deactivate Patch] button and change patch now.</string>
+    <string name="alarm_notification_desc_warning_needle_injection_error">Failed to insert the needle. Tap the [Deactivate Patch] button and change patch now.</string>
 
-    <string name="alarm_notification_desc_alert_low_insulin">패치에 남은 인슐린이 %s U 미만입니다. 패치 교체를 준비해 주세요.</string>
-    <string name="alarm_notification_desc_alert_expired_patch_first">패치 사용 기간이 만료되었습니다. 새 패치로 교체해 주세요.</string>
-    <string name="alarm_notification_desc_alert_expired_patch_second">패치 사용이 곧 종료됩니다. 새 패치로 교체해 주세요.</string>
-    <string name="alarm_notification_desc_alert_low_battery">패치에 배터리가 부족합니다. 패치 교체를 준비해 주세요.</string>
-    <string name="alarm_notification_desc_alert_invalid_temperature">인슐린 주입이 중단되었습니다. 즉시 적합한 온도(4.4도 이상 37도 이하)로 이동해 주세요. 적합한 온도가 되면 기저 주입이 재개됩니다.</string>
-    <string name="alarm_notification_desc_alert_not_used_app">확인 버튼을 눌러주세요. 확인 버튼을 누르지 않으면 경고 알람으로 상향되고 인슐린 주입이 차단됩니다.</string>
-    <string name="alarm_notification_desc_alert_incomplete_patch_setting">확인 버튼을 눌러 패치 연결을 완료해 주세요.</string>
-    <string name="alarm_notification_desc_alert_resume_infusion">주입 정지가 종료되었습니다. 주입 재개를 눌러 기저 주입을 다시 시작해 주세요.</string>
-    <string name="alarm_notification_desc_alert_off_bluetooth">패치 사용을 위해 블루투스가 필요합니다. 확인 버튼을 누르고 블루투스를 켜 주세요.</string>
+    <string name="alarm_notification_desc_alert_low_insulin">Less than %s U insulin remaining. Prepare to change the patch.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_first">Patch expired. Change patch now.</string>
+    <string name="alarm_notification_desc_alert_expired_patch_second">Patch will expire soon. Change patch now.</string>
+    <string name="alarm_notification_desc_alert_low_battery">Battery is low. Prepare to change the patch.</string>
+    <string name="alarm_notification_desc_alert_invalid_temperature">Insulin delivery paused due to extreme temperature. Move to 40℉–99℉ to resume.</string>
+    <string name="alarm_notification_desc_alert_not_used_app">Please tap [OK]. If ignored, it escalates to a critical alarm and insulin delivery will be stopped.</string>
+    <string name="alarm_notification_desc_alert_incomplete_patch_setting">Tap the [OK] button to complete the patch activation.</string>
+    <string name="alarm_notification_desc_alert_resume_infusion">Pause Insulin has ended. Tap [Start Insulin] to start.</string>
+    <string name="alarm_notification_desc_alert_off_bluetooth">Bluetooth is required to use the patch. Tap [OK] and turn Bluetooth on.</string>
 
-    <string name="alarm_notification_desc_notice_low_insulin">패치에 남은 인슐린이 %s U 미만입니다. 패치 교체를 준비해 주세요.</string>
-    <string name="alarm_notification_desc_notice_expired_patch">패치 사용 기간이 %s일 %s시간이 되었습니다. 패치 사용에 참고해 주세요.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone">%s(UTC %s)에서 %s(UTC %s)(으)로 국가 표준시간이 변경되었습니다.</string>
-    <string name="alarm_notification_desc_notice_change_time_zone_same_country">%s/%s(UTC %s)에서 %s/%s(UTC %s)(으)로 국가 표준시간이 변경되었습니다.</string>
-    <string name="alarm_notification_desc_notice_check_bg">볼러스 주입 후 %s이 지났습니다. 혈당을 확인해 주세요.</string>
-    <string name="alarm_notification_desc_notice_lgs_started">LGS 작동이 시작 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">패치 또는 CGM 연결이 끊겨 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS 일시 정지로 인하여 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_time_over">설정한 LGS 작동 시간대가 경과되어 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS 사용 설정을 OFF로 변경하여 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">CGM 혈당 값이 설정 값 이상으로 측정되어 LGS 작동이 종료 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_ended_unknown">알수 없는 이유로 인해 LGS 작동 종료 되었습니다.</string>
-    <string name="alarm_notification_desc_notice_lgs_error">패치 및 CGM 연결 상태를 확인해 주세요.</string>
+    <string name="alarm_notification_desc_notice_low_insulin">Less than %s U insulin remaining. Prepare to change the patch.</string>
+    <string name="alarm_notification_desc_notice_expired_patch">Patch usage time is %s days %s hours. Keep in mind during use.</string>
+    <string name="alarm_notification_desc_notice_change_time_zone">Time zone has changed from %s(UTC %s) to %s(UTC %s).</string>
+    <string name="alarm_notification_desc_notice_change_time_zone_same_country">Time zone has changed from %s/%s(UTC %s) to %s/%s(UTC %s).</string>
+    <string name="alarm_notification_desc_notice_check_bg">%s have passed since your bolus. Please check your blood glucose.</string>
+    <string name="alarm_notification_desc_notice_lgs_started">LGS started.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_disconnected_patch_or_cgm">LGS ended due to patch/CGM disconnection.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_pause_lgs">LGS ended due to LGS pause.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_time_over">LGS ended because scheduled time has elapsed.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_off_lgs">LGS ended because LGS was turned off.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_high_bg">LGS ended because CGM level exceeded the set threshold.</string>
+    <string name="alarm_notification_desc_notice_lgs_ended_unknown">LGS ended due to an unknown reason.</string>
+    <string name="alarm_notification_desc_notice_lgs_error">Please check patch and CGM connection.</string>
 
 </resources>

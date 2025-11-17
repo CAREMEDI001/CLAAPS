@@ -150,7 +150,7 @@ class CarelevoPumpPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(CarelevoOverviewFragment::class.java.name)
-        .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_carelevo_128)
         .pluginName(R.string.carelevo)
         .shortName(R.string.carelevo_shortname)
         .preferencesId(PluginDescription.PREFERENCE_SCREEN)
@@ -870,6 +870,7 @@ class CarelevoPumpPlugin @Inject constructor(
     }
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
+        aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: ${absoluteRate.toFloat()}, durationInMinutes: ${durationInMinutes.toLong()}, enforceNew: $enforceNew")
         val result = instantiator.providePumpEnactResult()
         if (!carelevoPatch.isBluetoothEnabled()) {
             aapsLogger.info(LTag.PUMP, "[CarelevoPumpPlugin::setTempBasalAbsolute] bluetooth is not enabled")
@@ -904,12 +905,7 @@ class CarelevoPumpPlugin @Inject constructor(
                             pumpType = PumpType.CAREMEDI_CARELEVO,
                             pumpSerial = serialNumber()
                         )
-                        result.success = true
-                        result.enacted = true
-                        result.duration = durationInMinutes
-                        result.absolute = absoluteRate
-                        result.isPercent = false
-                        result.isTempCancel = false
+                        result.success(true).enacted(true).duration(durationInMinutes).absolute(absoluteRate).isPercent(false).isTempCancel(false)
                     }
 
                     is ResponseResult.Error -> {
@@ -921,12 +917,10 @@ class CarelevoPumpPlugin @Inject constructor(
                     }
                 }
             }.doOnError {
-                result.success = false
-                result.enacted = false
+                result.success(false).enacted(false)
             }.map {
                 result
-            }
-            .blockingGet()
+            }.blockingGet()
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {

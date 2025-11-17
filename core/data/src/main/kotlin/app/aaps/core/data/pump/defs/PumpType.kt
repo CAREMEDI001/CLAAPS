@@ -430,7 +430,7 @@ enum class PumpType(
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.CarelevoCapabilities,
         isPatchPump = true,
-        maxReservoirReading = 50,
+        maxReservoirReading = 300,
         source = Source.Carelevo
     ),
 
