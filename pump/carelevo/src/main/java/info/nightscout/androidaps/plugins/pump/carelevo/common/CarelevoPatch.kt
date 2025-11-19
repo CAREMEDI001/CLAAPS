@@ -436,12 +436,12 @@ class CarelevoPatch @Inject constructor(
     private fun observePatchInfo() {
         infoDisposable += patchInfoMonitorUseCase.execute()
             .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.main)
+            .observeOn(aapsSchedulers.io)
             .subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
                         val result = response.data as CarelevoPatchInfoDomainModel?
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observePatchInfo] response success result ==> $result")
+                        aapsLogger.debug(LTag.PUMP, "[CarelevoPatchRx::observePatchInfo] response success result ==> ${result?.needleFailedCount}")
                         _patchInfo.onNext(Optional.ofNullable(result))
                     }
 

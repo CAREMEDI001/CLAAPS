@@ -15,17 +15,19 @@ import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.CarelevoBaseFrag
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.dialog.TextBottomSheetDialog
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.ext.repeatOnStartedWithViewOwner
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.ext.showDialogDiscardConfirm
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoConnectCannulaEvent
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchCannulaInsertionViewModel
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoConnectNeedleEvent
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchNeedleInsertionViewModel
 
-class CarelevoPatchCannulaInsertionFragment : CarelevoBaseFragment<FragmentCarelevoPatchCannulaInsertionBinding>(R.layout.fragment_carelevo_patch_cannula_insertion) {
+class CarelevoPatchNeedleInsertionFragment : CarelevoBaseFragment<FragmentCarelevoPatchCannulaInsertionBinding>(R.layout.fragment_carelevo_patch_cannula_insertion) {
 
     companion object {
 
-        fun getInstance(): CarelevoPatchCannulaInsertionFragment = CarelevoPatchCannulaInsertionFragment()
+        const val MAX_NEEDLE_CHECK_COUNT = 3
+
+        fun getInstance(): CarelevoPatchNeedleInsertionFragment = CarelevoPatchNeedleInsertionFragment()
     }
 
-    private val viewModel: CarelevoPatchCannulaInsertionViewModel by viewModels { viewModelFactory }
+    private val viewModel: CarelevoPatchNeedleInsertionViewModel by viewModels { viewModelFactory }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,48 +81,54 @@ class CarelevoPatchCannulaInsertionFragment : CarelevoBaseFragment<FragmentCarel
 
     private fun handleEvent(event: Event) {
         when (event) {
-            is CarelevoConnectCannulaEvent.ShowMessageBluetoothNotEnabled -> {
+            is CarelevoConnectNeedleEvent.ShowMessageBluetoothNotEnabled -> {
                 ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_bluetooth_not_enabled))
             }
 
-            is CarelevoConnectCannulaEvent.ShowMessageCarelevoIsNotConnected -> {
-                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_patch_not_connected))
+            is CarelevoConnectNeedleEvent.ShowMessageCarelevoIsNotConnected -> {
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_not_connected_waiting_retry))
             }
 
-            is CarelevoConnectCannulaEvent.ShowMessageProfileNotSet -> {
+            is CarelevoConnectNeedleEvent.ShowMessageProfileNotSet -> {
                 ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_profile_not_set))
             }
 
-            is CarelevoConnectCannulaEvent.CheckCannulaComplete -> {
+            is CarelevoConnectNeedleEvent.CheckNeedleComplete -> {
                 if (event.result) {
-                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_cannula_inserted))
+                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_needle_inserted))
                 } else {
-                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_cannula_not_inserted))
+                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_needle_not_inserted))
                 }
             }
 
-            is CarelevoConnectCannulaEvent.CheckCannulaFailed -> {
-                if (event.failedCount >= 3) {
+            is CarelevoConnectNeedleEvent.CheckNeedleFailed -> {
+                if (event.failedCount >= MAX_NEEDLE_CHECK_COUNT) {
                     activityFinish()
+                } else {
+                    // todo dialog로 변경
+                    ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_needle_retry_count, MAX_NEEDLE_CHECK_COUNT - event.failedCount))
                 }
-                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_cannula_check_failed))
             }
 
-            is CarelevoConnectCannulaEvent.DiscardComplete -> {
+            is CarelevoConnectNeedleEvent.CheckNeedleError -> {
+                ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_needle_check_failed))
+            }
+
+            is CarelevoConnectNeedleEvent.DiscardComplete -> {
                 ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_discard_complete))
                 activityFinish()
             }
 
-            is CarelevoConnectCannulaEvent.DiscardFailed -> {
+            is CarelevoConnectNeedleEvent.DiscardFailed -> {
                 ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_discard_failed))
             }
 
-            is CarelevoConnectCannulaEvent.SetBasalComplete -> {
+            is CarelevoConnectNeedleEvent.SetBasalComplete -> {
                 ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_set_basal_complete))
                 activityFinish()
             }
 
-            is CarelevoConnectCannulaEvent.SetBasalFailed -> {
+            is CarelevoConnectNeedleEvent.SetBasalFailed -> {
                 ToastUtils.infoToast(requireContext(), getString(R.string.carelevo_toast_msg_set_basal_failed))
             }
 
@@ -156,7 +164,7 @@ class CarelevoPatchCannulaInsertionFragment : CarelevoBaseFragment<FragmentCarel
             TextBottomSheetDialog.Button(
                 text = requireContext().getString(R.string.carelevo_btn_needle_insert_check),
                 onClickListener = {
-                    viewModel.startCheckCannula()
+                    viewModel.startCheckNeedle()
                 }
             )).build().show(childFragmentManager, "")
     }

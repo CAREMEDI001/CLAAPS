@@ -16,17 +16,17 @@ import info.nightscout.androidaps.plugins.pump.carelevo.common.model.State
 import info.nightscout.androidaps.plugins.pump.carelevo.common.model.UiState
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.ResponseResult
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.alarm.CarelevoAlarmInfo
-import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.result.ResultFailed
-import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.result.ResultSuccess
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.patch.NeedleCheckFailed
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.model.patch.NeedleCheckSuccess
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.type.AlarmCause
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.type.AlarmType
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.alarm.CarelevoAlarmInfoUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.basal.CarelevoSetBasalProgramUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.basal.model.SetBasalProgramRequestModel
-import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchCannulaInsertionCheckUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchDiscardUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoConnectCannulaEvent
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchNeedleInsertionCheckUseCase
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.model.CarelevoConnectNeedleEvent
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,12 +37,12 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.jvm.optionals.getOrNull
 
-class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
+class CarelevoPatchNeedleInsertionViewModel @Inject constructor(
     private val pumpSync: PumpSync,
     private val aapsSchedulers: AapsSchedulers,
     private val carelevoPatch: CarelevoPatch,
     private val bleController: CarelevoBleController,
-    private val patchCannulaInsertionCheckUseCase: CarelevoPatchCannulaInsertionCheckUseCase,
+    private val patchNeedleInsertionCheckUseCase: CarelevoPatchNeedleInsertionCheckUseCase,
     private val patchDiscardUseCase: CarelevoPatchDiscardUseCase,
     private val patchForceDiscardUseCase: CarelevoPatchForceDiscardUseCase,
     private val setBasalProgramUseCase: CarelevoSetBasalProgramUseCase,
@@ -70,23 +70,24 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
     fun triggerEvent(event: Event) {
         viewModelScope.launch {
             when (event) {
-                is CarelevoConnectCannulaEvent -> generateEventType(event).run { _event.emit(this) }
+                is CarelevoConnectNeedleEvent -> generateEventType(event).run { _event.emit(this) }
             }
         }
     }
 
     private fun generateEventType(event: Event): Event {
         return when (event) {
-            is CarelevoConnectCannulaEvent.ShowMessageBluetoothNotEnabled -> event
-            is CarelevoConnectCannulaEvent.ShowMessageCarelevoIsNotConnected -> event
-            is CarelevoConnectCannulaEvent.ShowMessageProfileNotSet -> event
-            is CarelevoConnectCannulaEvent.CheckCannulaComplete -> event
-            is CarelevoConnectCannulaEvent.CheckCannulaFailed -> event
-            is CarelevoConnectCannulaEvent.DiscardComplete -> event
-            is CarelevoConnectCannulaEvent.DiscardFailed -> event
-            is CarelevoConnectCannulaEvent.SetBasalComplete -> event
-            is CarelevoConnectCannulaEvent.SetBasalFailed -> event
-            else -> CarelevoConnectCannulaEvent.NoAction
+            is CarelevoConnectNeedleEvent.ShowMessageBluetoothNotEnabled -> event
+            is CarelevoConnectNeedleEvent.ShowMessageCarelevoIsNotConnected -> event
+            is CarelevoConnectNeedleEvent.ShowMessageProfileNotSet -> event
+            is CarelevoConnectNeedleEvent.CheckNeedleComplete -> event
+            is CarelevoConnectNeedleEvent.CheckNeedleFailed -> event
+            is CarelevoConnectNeedleEvent.CheckNeedleError -> event
+            is CarelevoConnectNeedleEvent.DiscardComplete -> event
+            is CarelevoConnectNeedleEvent.DiscardFailed -> event
+            is CarelevoConnectNeedleEvent.SetBasalComplete -> event
+            is CarelevoConnectNeedleEvent.SetBasalFailed -> event
+            else -> CarelevoConnectNeedleEvent.NoAction
         }
     }
 
@@ -108,63 +109,51 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
                 val failedCount = patchInfo.needleFailedCount ?: 0
                 if (failedCount >= 3) {
                     recordNeedleInsertFailAlarm()
-                    triggerEvent(CarelevoConnectCannulaEvent.CheckCannulaFailed(failedCount))
+                    triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleFailed(failedCount))
                 }
             }
     }
 
-    fun startCheckCannula() {
+    fun startCheckNeedle() {
         if (!carelevoPatch.isBluetoothEnabled()) {
-            triggerEvent(CarelevoConnectCannulaEvent.ShowMessageBluetoothNotEnabled)
+            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageBluetoothNotEnabled)
             return
         }
         if (!carelevoPatch.isCarelevoConnected()) {
-            triggerEvent(CarelevoConnectCannulaEvent.ShowMessageCarelevoIsNotConnected)
+            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageCarelevoIsNotConnected)
             return
         }
 
         setUiState(UiState.Loading)
-        compositeDisposable += patchCannulaInsertionCheckUseCase.execute()
-            .timeout(10000L, TimeUnit.MILLISECONDS)
+        compositeDisposable += patchNeedleInsertionCheckUseCase.execute()
+            .timeout(20, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startCheckCannula] doOnError called $it")
+                Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startCheckNeedle] doOnError called $it")
                 setUiState(UiState.Idle)
                 val failedCount = carelevoPatch.patchInfo.value?.getOrNull()?.needleFailedCount ?: return@doOnError
-                triggerEvent(CarelevoConnectCannulaEvent.CheckCannulaFailed(failedCount))
+                triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleFailed(failedCount))
             }.subscribe { response ->
+                setUiState(UiState.Idle)
                 when (response) {
                     is ResponseResult.Success -> {
-                        val result = response.data
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startCheckCannula] response success result ==> $result")
-                        setUiState(UiState.Idle)
-                        when (result) {
-                            is ResultSuccess -> {
-                                triggerEvent(CarelevoConnectCannulaEvent.CheckCannulaComplete(true))
+                        when (val body = response.data) {
+                            is NeedleCheckSuccess -> {
+                                triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleComplete(true))
                             }
 
-                            is ResultFailed -> {
-                                val failedCount = carelevoPatch.patchInfo.value?.getOrNull()?.needleFailedCount ?: return@subscribe
-                                triggerEvent(CarelevoConnectCannulaEvent.CheckCannulaFailed(failedCount))
+                            is NeedleCheckFailed -> {
+                                val failedCount = body.failedCount
+                                triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleFailed(failedCount))
                             }
 
                             else -> Unit
                         }
                     }
 
-                    is ResponseResult.Error -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startCheckCannula] response error : ${response.e}")
-                        setUiState(UiState.Idle)
-                        val failedCount = carelevoPatch.patchInfo.value?.getOrNull()?.needleFailedCount ?: return@subscribe
-                        triggerEvent(CarelevoConnectCannulaEvent.CheckCannulaFailed(failedCount))
-                    }
-
                     else -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startCheckCannula] response failed")
-                        setUiState(UiState.Idle)
-                        val failedCount = carelevoPatch.patchInfo.value?.getOrNull()?.needleFailedCount ?: return@subscribe
-                        triggerEvent(CarelevoConnectCannulaEvent.CheckCannulaFailed(failedCount))
+                        triggerEvent(CarelevoConnectNeedleEvent.CheckNeedleError)
                     }
                 }
             }
@@ -172,15 +161,15 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
 
     fun startSetBasal() {
         if (!carelevoPatch.isBluetoothEnabled()) {
-            triggerEvent(CarelevoConnectCannulaEvent.ShowMessageBluetoothNotEnabled)
+            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageBluetoothNotEnabled)
             return
         }
         if (!carelevoPatch.isCarelevoConnected()) {
-            triggerEvent(CarelevoConnectCannulaEvent.ShowMessageCarelevoIsNotConnected)
+            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageCarelevoIsNotConnected)
             return
         }
         if (carelevoPatch.profile.value == null) {
-            triggerEvent(CarelevoConnectCannulaEvent.ShowMessageProfileNotSet)
+            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageProfileNotSet)
             return
         }
 
@@ -192,11 +181,11 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
                 .subscribeOn(aapsSchedulers.io)
                 .doOnError {
                     setUiState(UiState.Idle)
-                    triggerEvent(CarelevoConnectCannulaEvent.SetBasalFailed)
+                    triggerEvent(CarelevoConnectNeedleEvent.SetBasalFailed)
                 }.subscribe { response ->
                     when (response) {
                         is ResponseResult.Success -> {
-                            Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startSetBasal] response success")
+                            Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startSetBasal] response success")
                             pumpSync.connectNewPump(true)
                             pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = System.currentTimeMillis(),
@@ -205,24 +194,24 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
                                 pumpSerial = carelevoPatch.patchInfo.value?.getOrNull()?.manufactureNumber ?: ""
                             )
                             setUiState(UiState.Idle)
-                            triggerEvent(CarelevoConnectCannulaEvent.SetBasalComplete)
+                            triggerEvent(CarelevoConnectNeedleEvent.SetBasalComplete)
                         }
 
                         is ResponseResult.Error -> {
-                            Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startSetBasal] response error : ${response.e}")
+                            Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startSetBasal] response error : ${response.e}")
                             setUiState(UiState.Idle)
-                            triggerEvent(CarelevoConnectCannulaEvent.SetBasalFailed)
+                            triggerEvent(CarelevoConnectNeedleEvent.SetBasalFailed)
                         }
 
                         else -> {
-                            Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startSetBasal] response failed")
+                            Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startSetBasal] response failed")
                             setUiState(UiState.Idle)
-                            triggerEvent(CarelevoConnectCannulaEvent.SetBasalFailed)
+                            triggerEvent(CarelevoConnectNeedleEvent.SetBasalFailed)
                         }
                     }
                 }
         } ?: run {
-            triggerEvent(CarelevoConnectCannulaEvent.ShowMessageProfileNotSet)
+            triggerEvent(CarelevoConnectNeedleEvent.ShowMessageProfileNotSet)
         }
     }
 
@@ -241,29 +230,29 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startDiscard] doOnError called : $it")
+                Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startDiscard] doOnError called : $it")
                 setUiState(UiState.Idle)
-                triggerEvent(CarelevoConnectCannulaEvent.DiscardFailed)
+                triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
             }.subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startDiscard] response success")
+                        Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startDiscard] response success")
                         bleController.unBondDevice()
                         carelevoPatch.releasePatch()
                         setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectCannulaEvent.DiscardComplete)
+                        triggerEvent(CarelevoConnectNeedleEvent.DiscardComplete)
                     }
 
                     is ResponseResult.Error -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startDiscard] response error : ${response.e}")
+                        Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startDiscard] response error : ${response.e}")
                         setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectCannulaEvent.DiscardFailed)
+                        triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
                     }
 
                     else -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startDiscard] response failed")
+                        Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startDiscard] response failed")
                         setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectCannulaEvent.DiscardFailed)
+                        triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
                     }
                 }
             }
@@ -276,29 +265,29 @@ class CarelevoPatchCannulaInsertionViewModel @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribeOn(aapsSchedulers.io)
             .doOnError {
-                Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startForceDiscard] doOnError called : $it")
+                Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startForceDiscard] doOnError called : $it")
                 setUiState(UiState.Idle)
-                triggerEvent(CarelevoConnectCannulaEvent.DiscardFailed)
+                triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
             }.subscribe { response ->
                 when (response) {
                     is ResponseResult.Success -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startForceDiscard] response success")
+                        Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startForceDiscard] response success")
                         bleController.unBondDevice()
                         carelevoPatch.releasePatch()
                         setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectCannulaEvent.DiscardComplete)
+                        triggerEvent(CarelevoConnectNeedleEvent.DiscardComplete)
                     }
 
                     is ResponseResult.Error -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startForceDiscard] response error : ${response.e}")
+                        Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startForceDiscard] response error : ${response.e}")
                         setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectCannulaEvent.DiscardFailed)
+                        triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
                     }
 
                     else -> {
-                        Log.d("connect_test", "[CarelevoConnectCannulaViewModel::startForceDiscard] response failed")
+                        Log.d("connect_test", "[CarelevoConnectNeedleViewModel::startForceDiscard] response failed")
                         setUiState(UiState.Idle)
-                        triggerEvent(CarelevoConnectCannulaEvent.DiscardFailed)
+                        triggerEvent(CarelevoConnectNeedleEvent.DiscardFailed)
                     }
                 }
             }

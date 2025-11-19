@@ -8,9 +8,8 @@ import info.nightscout.androidaps.plugins.pump.carelevo.R
 import info.nightscout.androidaps.plugins.pump.carelevo.databinding.ActivityCarelevoBinding
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.CarelevoBaseActivity
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoCommunicationCheckFragment
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchCannulaInsertionFragment
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchConnectionFlowFragment
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.fragments.CarelevoPatchSafetyCheckFragment
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.type.CarelevoPatchStep
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.type.CarelevoScreenType
 
 class CarelevoActivity : CarelevoBaseActivity<ActivityCarelevoBinding>(R.layout.activity_carelevo) {
@@ -24,19 +23,36 @@ class CarelevoActivity : CarelevoBaseActivity<ActivityCarelevoBinding>(R.layout.
     private fun setupView() {
         val screenTypeName = intent.getStringExtra("screenType")
         val screenType = CarelevoScreenType.valueOf(screenTypeName ?: CarelevoScreenType.CONNECTION_FLOW_START.name)
-        when (screenType) {
-            CarelevoScreenType.CONNECTION_FLOW_START -> setFragment(CarelevoPatchConnectionFlowFragment.getInstance())
-            CarelevoScreenType.COMMUNICATION_CHECK   -> setFragment(CarelevoCommunicationCheckFragment.getInstance())
-            CarelevoScreenType.SAFETY_CHECK          -> setFragment(CarelevoPatchSafetyCheckFragment.getInstance())
-            CarelevoScreenType.CANNULA_INSERTION     -> setFragment(CarelevoPatchCannulaInsertionFragment.getInstance())
-            CarelevoScreenType.PATCH_DISCARD         -> Unit
+        /*        when (screenType) {
+                    CarelevoScreenType.CONNECTION_FLOW_START -> setFragment(CarelevoPatchConnectionFlowFragment.getInstance())
+                    CarelevoScreenType.COMMUNICATION_CHECK -> setFragment(CarelevoCommunicationCheckFragment.getInstance())
+                    CarelevoScreenType.SAFETY_CHECK -> setFragment(CarelevoPatchSafetyCheckFragment.getInstance())
+                    CarelevoScreenType.CANNULA_INSERTION -> setFragment(CarelevoPatchCannulaInsertionFragment.getInstance())
+                    CarelevoScreenType.PATCH_DISCARD -> Unit
+                }*/
+
+        val initialStep = when (screenType) {
+            CarelevoScreenType.CONNECTION_FLOW_START -> CarelevoPatchStep.PATCH_START
+            CarelevoScreenType.SAFETY_CHECK -> CarelevoPatchStep.SAFETY_CHECK
+            CarelevoScreenType.NEEDLE_INSERTION -> CarelevoPatchStep.NEEDLE_INSERTION
+            CarelevoScreenType.COMMUNICATION_CHECK -> null
+            CarelevoScreenType.PATCH_DISCARD -> null
+        }
+
+        if (initialStep != null) {
+            setFragment(CarelevoPatchConnectionFlowFragment.getInstance(initialStep))
+        } else {
+            when (screenType) {
+                CarelevoScreenType.COMMUNICATION_CHECK -> setFragment(CarelevoCommunicationCheckFragment.getInstance())
+                else -> Unit
+            }
         }
     }
 
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         permissions.entries.forEach { permission ->
             when {
-                permission.value                                     -> {
+                permission.value -> {
                     Toast.makeText(this, "permission granted", Toast.LENGTH_SHORT).show()
                 }
 

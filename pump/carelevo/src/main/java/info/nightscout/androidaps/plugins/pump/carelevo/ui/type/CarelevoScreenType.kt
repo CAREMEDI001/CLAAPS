@@ -5,5 +5,5 @@ enum class CarelevoScreenType {
     COMMUNICATION_CHECK,      // 패치 점검 화면
     PATCH_DISCARD,            // 패치 종료 화면
     SAFETY_CHECK,             // 안전 점검 화면
-    CANNULA_INSERTION,        // 바늘 주입
+    NEEDLE_INSERTION,        // 바늘 주입
 }

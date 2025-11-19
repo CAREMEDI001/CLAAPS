@@ -68,6 +68,8 @@ class CarelevoPatchSafetyCheckFragment : CarelevoBaseFragment<FragmentCarelevoPa
 
         if (viewModel.isSafetyCheckPassed()) {
             handleSafetyCheckSuccess()
+            handleProgress(100)
+            handleRemainSec(0)
         }
     }
 
@@ -92,14 +94,19 @@ class CarelevoPatchSafetyCheckFragment : CarelevoBaseFragment<FragmentCarelevoPa
         }
 
         repeatOnStartedWithViewOwner {
-            viewModel.progress.collect {
-                handleProgress(it)
+            viewModel.progress.collect { value ->
+                value?.let {
+                    handleProgress(it)
+                }
+
             }
         }
 
         repeatOnStartedWithViewOwner {
-            viewModel.remainSec.collect {
-                handleRemainSec(it)
+            viewModel.remainSec.collect { value ->
+                value?.let {
+                    handleRemainSec(it)
+                }
             }
         }
     }
@@ -133,7 +140,7 @@ class CarelevoPatchSafetyCheckFragment : CarelevoBaseFragment<FragmentCarelevoPa
             is CarelevoConnectSafetyCheckEvent.ShowMessageCarelevoIsNotConnected -> {
                 ToastUtils.infoToast(
                     requireContext(),
-                    getString(R.string.carelevo_toast_msg_not_connected)
+                    getString(R.string.carelevo_toast_msg_not_connected_waiting_retry)
                 )
             }
 

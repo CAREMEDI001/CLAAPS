@@ -72,11 +72,14 @@
     <string name="carelevo_dialog_insulin_input_title">Enter insulin amount.</string>
     <string name="carelevo_dialog_insulin_input_hint">Insulin amount</string>
 
+    <string name="patch_prepare_dialog_title_insulin_amount">Select filled amount.</string>
+    <string name="patch_prepare_dialog_msg_insulin_range">Range : 50 ~ 300 U</string>
+
     <string name="carelevo_connect_prepare_title">Patch Started</string>
     <string name="carelevo_connect_patch_title">Connect Patch</string>
     <string name="carelevo_connect_safety_check_title">Safety Check</string>
     <string name="carelevo_connect_patch_attach_title">Apply Patch</string>
-    <string name="carelevo_connect_cannula_check_title">Insert Needle</string>
+    <string name="carelevo_connect_needle_check_title">Insert Needle</string>
 
     <string name="key_carelevo_low_reservoir_reminders" translatable="false">carelevo_low_reservoir_reminders</string>
     <string name="carelevo_low_reservoir_reminders_title">Low Insulin Notification</string>
@@ -131,15 +134,16 @@
     <string name="carelevo_toast_patch_connecting">Patch is connecting…</string>
     <string name="carelevo_toast_msg_bluetooth_not_enabled">Bluetooth is not enabled. Please check.</string>
     <string name="carelevo_toast_msg_patch_not_connected">No patch connected.</string>
-    <string name="carelevo_toast_msg_not_connected">No patch connected.</string>
+    <string name="carelevo_toast_msg_not_connected_waiting_retry">The patch is not connected yet. Please try again in a moment.</string>
 
     <!-- Profile -->
     <string name="carelevo_toast_msg_profile_not_set">Profile is not set.</string>
 
-    <!-- Cannula Insertion -->
-    <string name="carelevo_toast_msg_cannula_inserted">Cannula insertion completed.</string>
-    <string name="carelevo_toast_msg_cannula_not_inserted">Cannula insertion not completed.</string>
-    <string name="carelevo_toast_msg_cannula_check_failed">Cannula check failed.</string>
+    <!-- Needle Insertion -->
+    <string name="carelevo_toast_msg_needle_inserted">Needle insertion completed.</string>
+    <string name="carelevo_toast_msg_needle_not_inserted">Needle insertion not completed.</string>
+    <string name="carelevo_toast_msg_needle_check_failed">Needle check failed.</string>
+    <string name="carelevo_toast_msg_needle_retry_count">%d retry attempt(s) left for needle insertion.</string>
 
     <!-- Patch Discard -->
     <string name="carelevo_toast_msg_discard_complete">Patch use completed.</string>

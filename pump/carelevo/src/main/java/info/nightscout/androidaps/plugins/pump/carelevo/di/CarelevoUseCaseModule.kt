@@ -27,11 +27,11 @@ import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.infusion.CarelevoPumpStopUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoConnectNewPatchUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchAdditionalPrimingUseCase
-import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchCannulaInsertionCheckUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchCannulaInsertionConfirmUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchDiscardUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchForceDiscardUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchInfoMonitorUseCase
+import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchNeedleInsertionCheckUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchRptInfusionInfoProcessUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchSafetyCheckUseCase
 import info.nightscout.androidaps.plugins.pump.carelevo.domain.usecase.patch.CarelevoPatchTimeZoneUpdateUseCase
@@ -346,8 +346,8 @@ class CarelevoUseCaseModule {
         carelevoPatchObserver: CarelevoPatchObserver,
         carelevoPatchRepository: CarelevoPatchRepository,
         carelevoPatchInfoRepository: CarelevoPatchInfoRepository
-    ): CarelevoPatchCannulaInsertionCheckUseCase {
-        return CarelevoPatchCannulaInsertionCheckUseCase(
+    ): CarelevoPatchNeedleInsertionCheckUseCase {
+        return CarelevoPatchNeedleInsertionCheckUseCase(
             carelevoPatchObserver,
             carelevoPatchRepository,
             carelevoPatchInfoRepository

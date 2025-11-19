@@ -24,7 +24,19 @@ class CarelevoPatchConnectionFlowFragment : CarelevoBaseFragment<FragmentCarelev
 
     companion object {
 
-        fun getInstance(): CarelevoPatchConnectionFlowFragment = CarelevoPatchConnectionFlowFragment()
+        private const val ARG_INITIAL_STEP = "arg_initial_step"
+
+        fun getInstance(initialStep: CarelevoPatchStep = CarelevoPatchStep.PATCH_START) =
+            CarelevoPatchConnectionFlowFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_INITIAL_STEP, initialStep.name)
+                }
+            }
+    }
+
+    private val initialStep: CarelevoPatchStep by lazy {
+        val name = arguments?.getString(ARG_INITIAL_STEP)
+        name?.let { CarelevoPatchStep.valueOf(it) } ?: CarelevoPatchStep.PATCH_START
     }
 
     private val viewModel: CarelevoPatchConnectionFlowViewModel by activityViewModels { viewModelFactory }
@@ -50,6 +62,7 @@ class CarelevoPatchConnectionFlowFragment : CarelevoBaseFragment<FragmentCarelev
             viewModel.observePatchEvent()
             viewModel.setIsCreated(true)
         }
+        viewModel.setPage(initialStep)
         setupView()
         setupObserver()
     }
@@ -68,7 +81,7 @@ class CarelevoPatchConnectionFlowFragment : CarelevoBaseFragment<FragmentCarelev
                     CarelevoPatchStep.PATCH_CONNECT -> CarelevoPatchConnectFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_patch_title)
                     CarelevoPatchStep.SAFETY_CHECK -> CarelevoPatchSafetyCheckFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_safety_check_title)
                     CarelevoPatchStep.PATCH_ATTACH -> CarelevoPatchAttachFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_patch_attach_title)
-                    CarelevoPatchStep.NEEDLE_INSERTION -> CarelevoPatchCannulaInsertionFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_cannula_check_title)
+                    CarelevoPatchStep.NEEDLE_INSERTION -> CarelevoPatchNeedleInsertionFragment.getInstance() to requireContext().getString(R.string.carelevo_connect_needle_check_title)
                 }
                 setFragmentIfChanged(currentFragment)
                 binding.tvTitle.text = title

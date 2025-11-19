@@ -11,9 +11,9 @@ import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.ViewModelKey
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoAlarmViewModel
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoCommunicationCheckViewModel
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoOverviewViewModel
-import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchCannulaInsertionViewModel
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchConnectViewModel
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchConnectionFlowViewModel
+import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchNeedleInsertionViewModel
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchSafetyCheckViewModel
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.viewModel.CarelevoPatchStartViewModel
 import javax.inject.Provider
@@ -59,8 +59,8 @@ abstract class CarelevoViewModelModule {
     @Binds
     @IntoMap
     @CarelevoPluginQualifier
-    @ViewModelKey(CarelevoPatchCannulaInsertionViewModel::class)
-    abstract fun bindCarelevoConnectCannulaViewModel(carelevoConnectCannulaViewModel: CarelevoPatchCannulaInsertionViewModel): ViewModel
+    @ViewModelKey(CarelevoPatchNeedleInsertionViewModel::class)
+    abstract fun bindCarelevoConnectCannulaViewModel(carelevoConnectCannulaViewModel: CarelevoPatchNeedleInsertionViewModel): ViewModel
 
     @Binds
     @IntoMap

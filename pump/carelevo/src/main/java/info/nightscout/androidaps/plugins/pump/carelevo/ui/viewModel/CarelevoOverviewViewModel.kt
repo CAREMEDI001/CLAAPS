@@ -191,16 +191,18 @@ class CarelevoOverviewViewModel @Inject constructor(
     }
 
     private fun updateCheckScreen(patchInfo: CarelevoPatchInfoDomainModel) {
+        aapsLogger.debug("updateCheckScreen: $patchInfo")
         val screenType = when {
             patchInfo.checkNeedle == false -> {
                 val count = patchInfo.needleFailedCount
-                if (count != null && count < 3) CarelevoScreenType.CANNULA_INSERTION else null
+                if (count != null && count < 3) CarelevoScreenType.NEEDLE_INSERTION else null
             }
 
-            patchInfo.checkSafety == false -> CarelevoScreenType.SAFETY_CHECK
-            patchInfo.checkSafety == true && patchInfo.checkNeedle == null -> CarelevoScreenType.SAFETY_CHECK
+            patchInfo.checkSafety == null -> CarelevoScreenType.SAFETY_CHECK
+            patchInfo.checkSafety && patchInfo.checkNeedle == null -> CarelevoScreenType.SAFETY_CHECK
             else -> null
         }
+        aapsLogger.debug("updateCheckScreen: $screenType")
         _isCheckScreen.tryEmit(screenType)
     }
 

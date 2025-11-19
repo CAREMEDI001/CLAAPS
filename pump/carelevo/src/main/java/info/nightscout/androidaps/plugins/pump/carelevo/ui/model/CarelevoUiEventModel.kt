@@ -59,18 +59,19 @@ sealed class CarelevoConnectSafetyCheckEvent : Event {
 
 }
 
-sealed class CarelevoConnectCannulaEvent : Event {
+sealed class CarelevoConnectNeedleEvent : Event {
 
-    data object NoAction : CarelevoConnectCannulaEvent()
-    data object ShowMessageBluetoothNotEnabled : CarelevoConnectCannulaEvent()
-    data object ShowMessageCarelevoIsNotConnected : CarelevoConnectCannulaEvent()
-    data object ShowMessageProfileNotSet : CarelevoConnectCannulaEvent()
-    data class CheckCannulaComplete(val result: Boolean) : CarelevoConnectCannulaEvent()
-    data class CheckCannulaFailed(val failedCount: Int) : CarelevoConnectCannulaEvent()
-    data object DiscardComplete : CarelevoConnectCannulaEvent()
-    data object DiscardFailed : CarelevoConnectCannulaEvent()
-    data object SetBasalComplete : CarelevoConnectCannulaEvent()
-    data object SetBasalFailed : CarelevoConnectCannulaEvent()
+    data object NoAction : CarelevoConnectNeedleEvent()
+    data object ShowMessageBluetoothNotEnabled : CarelevoConnectNeedleEvent()
+    data object ShowMessageCarelevoIsNotConnected : CarelevoConnectNeedleEvent()
+    data object ShowMessageProfileNotSet : CarelevoConnectNeedleEvent()
+    data class CheckNeedleComplete(val result: Boolean) : CarelevoConnectNeedleEvent()
+    data class CheckNeedleFailed(val failedCount: Int) : CarelevoConnectNeedleEvent()
+    data object CheckNeedleError : CarelevoConnectNeedleEvent()
+    data object DiscardComplete : CarelevoConnectNeedleEvent()
+    data object DiscardFailed : CarelevoConnectNeedleEvent()
+    data object SetBasalComplete : CarelevoConnectNeedleEvent()
+    data object SetBasalFailed : CarelevoConnectNeedleEvent()
 }
 
 sealed class CarelevoCommunicationCheckEvent : Event {
