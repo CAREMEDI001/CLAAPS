@@ -55,6 +55,7 @@ import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.jvm.optionals.getOrNull
@@ -208,7 +209,7 @@ class CarelevoOverviewViewModel @Inject constructor(
         _expirationTime.value = ui.expirationTime
         //_infusionStatus.value = ui.infusionStatus
         _insulinRemains.value = ui.insulinRemainText
-        _totalInsulinAmount.value = ui.totalBasal + ui.totalBolus
+        _totalInsulinAmount.value = String.format(Locale.US, "%.2f", ui.totalBasal + ui.totalBolus).toDouble()
         _isPumpStop.value = ui.isPumpStopped
         _runningRemainMinutes.value = ui.runningRemainMinutes
     }

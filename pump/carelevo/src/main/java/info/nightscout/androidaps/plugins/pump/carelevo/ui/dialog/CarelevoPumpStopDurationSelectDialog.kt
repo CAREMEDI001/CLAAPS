@@ -1,11 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.carelevo.ui.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import app.aaps.core.ui.extensions.setSelection
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import info.nightscout.androidaps.plugins.pump.carelevo.R
 import info.nightscout.androidaps.plugins.pump.carelevo.databinding.DialogCarelevoPumpStopDurationSelectBinding
 import info.nightscout.androidaps.plugins.pump.carelevo.ui.base.CarelevoBaseDialog
@@ -21,11 +20,31 @@ class CarelevoPumpStopDurationSelectDialog : CarelevoBaseDialog<DialogCarelevoPu
 
     private var positiveClickListener : ((duration : Int) -> Unit)? = null
 
+    private val onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+        dialog?.let {
+            val bottomSheet = it.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            bottomSheet.layoutParams.height = binding.root.measuredHeight
+            val behavior = BottomSheetBehavior.from(bottomSheet)
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior.skipCollapsed = true
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         bindRadioButton()
         setupView()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.root.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
     }
 
     private fun setupView() {

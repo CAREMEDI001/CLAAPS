@@ -743,6 +743,7 @@ class CarelevoPumpPlugin @Inject constructor(
 
     // start imme bolus infusion
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::deliverTreatment] detailedBolusInfo : ${detailedBolusInfo.bolusType}")
         require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
@@ -767,7 +768,6 @@ class CarelevoPumpPlugin @Inject constructor(
                 when (response) {
                     is ResponseResult.Success -> {
                         val responseResult = response.data as StartImmeBolusInfusionResponseModel
-                        aapsLogger.debug(LTag.PUMP, "[CarelevoPumpPlugin::deliverTreatment] response success result : $responseResult")
                         _lastDateTime = System.currentTimeMillis()
 
                         val totalSec = responseResult.expectSec
@@ -779,14 +779,23 @@ class CarelevoPumpPlugin @Inject constructor(
                                         status = rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
                                         percent = 100
                                     })
+                                    pumpSync.syncBolusWithPumpId(
+                                        detailedBolusInfo.timestamp,
+                                        detailedBolusInfo.insulin,
+                                        detailedBolusInfo.bolusType,
+                                        dateUtil.now(),
+                                        PumpType.CAREMEDI_CARELEVO,
+                                        serialNumber()
+                                    )
                                     handleFinishImmeBolus()
                                 } else {
                                     // delay(1000)
                                     SystemClock.sleep(1000)
                                     val delivering = (detailedBolusInfo.insulin / totalSec) * it
+                                    val percentage = kotlin.math.min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
                                     rxBus.send(EventOverviewBolusProgress.apply {
                                         status = rh.gs(app.aaps.core.ui.R.string.bolus_delivering, delivering)
-                                        percent = kotlin.math.min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
+                                        percent = percentage
                                         t = tr
                                     })
                                 }
